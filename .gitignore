@@ -1,0 +1,9 @@
+.direnv
+result
+target
+
+
+# Added by cargo
+
+/target
+todo.md

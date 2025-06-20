@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Temporis
+GenericName=Pomodoro Application
+Exec=temporis
+Icon=org.reciperium.temporis
+Type=Application
+Terminal=false
+Categories=Utility
+Keywords=pomodoro;timer;productivity;
+SingleMainWindow=true

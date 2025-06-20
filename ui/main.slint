@@ -1,0 +1,226 @@
+import { AboutSlint, Button, VerticalBox, ProgressIndicator, Spinner } from "std-widgets.slint";
+import { Palette, StyleMetrics } from "std-widgets.slint";
+
+export enum Interval {
+    Focus, ShortBreak, LongBreak
+}
+
+struct Message {
+    summary: string,
+    body: string,
+}
+
+export global System {
+    in-out property <int> focus_duration: 1500; // 25 minutes
+    in-out property <int> short_break_duration: 300; // 5 minutes
+    in-out property <int> long_break_duration: 1200; // 20 minutes
+    in-out property <int> sessions: 4;
+
+    callback notify(message: Message);
+}
+
+export component Pomodoro inherits Window {
+    min-width: 300px;
+    min-height: 450px;
+    icon: @image-url("./icons/logo.svg");
+
+    property <bool> started: false;
+    property <Interval> status: Interval.Focus;
+    property <int> value: getDuration(status);
+    property <int> sessionCount: System.sessions;
+
+    property <[Message]> focus_messages: [
+        {
+            summary: "Interval Ended",
+            body: "Time for a breather! Hydrate with some water and stretch a bit"
+        },
+        {
+            summary: "Interval Ended",
+            body: "Great work! Stand up, walk around, or do a few quick exercises to recharge"
+        },
+        {
+            summary: "Interval Ended",
+            body: "Step away from the screen; perhaps grab a drink or stretch"
+        },
+        {
+            summary: "Interval Ended",
+            body: "Break time! How about a short walk or some light stretching to clear your head?"
+        },
+    ];
+    property <[Message]> short_break_messages: [
+        { summary: "Break Ended", body: "Time to focus again! Keep up the good work!" },
+        { summary: "Break Ended", body: "Great job! Let's get back to work!" },
+        { summary: "Break Ended", body: "Ready to dive back in? Let's go!" },
+        { summary: "Break Ended", body: "Focus time again. You got this!" },
+    ];
+    property <[Message]> long_break_messages: [
+        {
+            summary: "Break Ended",
+            body: "Time to get back to it. You're refreshed and ready!"
+        },
+        { summary: "Break Ended", body: "Long break's done. What's next on your to-do list?" },
+        { summary: "Break Ended", body: "Feeling recharged? Let's finish strong!" },
+        { summary: "Break Ended", body: "Focus time again. You got this!" },
+    ];
+    property <int> message_count: 0;
+    pure function nextMessage(finished_interval: Interval) -> Message {
+        if finished_interval == Interval.Focus {
+            return focus_messages[mod(sessionCount, 3)];
+        } else if finished_interval == Interval.ShortBreak {
+
+            return short_break_messages[mod(sessionCount, 3)];
+        } else if finished_interval == Interval.LongBreak {
+
+            return long_break_messages[mod(sessionCount, 3)];
+        }
+        return { summary: "Error", body: "Unexpected interval detected" };
+    }
+
+    pure function getDuration(counter: Interval) -> int {
+        if (counter == Interval.Focus) {
+            // return 1500; // 25 minutes
+            return System.focus_duration;
+        } else if (counter == Interval.ShortBreak) {
+            // return 300; // 5 minutes
+            return System.short_break_duration;
+        } else {
+            // return 1200; // 20 minutes
+            return System.long_break_duration;
+        }
+    }
+
+    pure function nextInterval(interval: Interval, sessionCount: int) -> Interval {
+        if (interval == Interval.LongBreak || interval == Interval.ShortBreak) {
+            return Interval.Focus;
+        } else if (interval == Interval.Focus) {
+            if (mod(sessionCount, 5) == 0) {
+                return Interval.LongBreak;
+            } else {
+                return Interval.ShortBreak;
+            }
+        }
+        return Interval.Focus;
+    }
+
+    pure function intervalToString(interval: Interval) -> string {
+        if (interval == Interval.Focus) {
+            return "Focus";
+        } else if (interval == Interval.ShortBreak) {
+            return "Short Break";
+        } else {
+            return "Long Break";
+        }
+    }
+
+    pure function displayTime(seconds: int) -> string {
+        floor(seconds / 60) + ":" + (mod(seconds, 60) / 1 < 10 ? "0" : "") + floor(mod(seconds, 60) / 1)
+    }
+
+    timer := Timer {
+        interval: 1s;
+        running: false;
+        triggered() => {
+            value -= 1;
+            if (value == 0) {
+                if status == Interval.Focus {
+                    sessionCount = sessionCount + 1;
+                }
+                System.notify(nextMessage(status));
+                status = nextInterval(status, sessionCount);
+                value = getDuration(status);
+            }
+        }
+    }
+
+    VerticalBox {
+        // Rectangle {
+        //     width: 100%;
+        //     height: 1px;
+        //     background: Palette.alternate-foreground;
+        // }
+
+        alignment: center;
+        spacing: 20px;
+
+        HorizontalLayout {
+            alignment: center;
+            Text {
+                text: intervalToString(status);
+                font-size: 20pt;
+            }
+        }
+
+        HorizontalLayout {
+            alignment: center;
+            VerticalLayout {
+                Text {
+                    text: displayTime(value);
+                    font-size: 40pt;
+                    color: Palette.accent-background;
+                    font-weight: 600;
+                }
+            }
+        }
+
+        ProgressIndicator {
+            progress: 1 - value / getDuration(status);
+        }
+
+        HorizontalLayout {
+            alignment: center;
+            Text {
+                visible: status == Interval.Focus;
+                text: "Session " + sessionCount;
+            }
+        }
+
+        HorizontalLayout {
+            alignment: center;
+            spacing: 5px;
+            Button {
+                text: timer.running ? "Pause" : root.started ? "Continue" : "Start";
+                icon: timer.running ? @image-url("./icons/pause.svg") : @image-url("./icons/play.svg");
+                colorize-icon: true;
+                clicked() => {
+                    if value > 0 {
+                        timer.running = !timer.running;
+                    }
+                    // Only on start we set the root.started variable to true
+                    if (!root.started) {
+                        root.started = true;
+                    }
+                }
+            }
+
+            Button {
+                text: "Reset";
+                icon: @image-url("./icons/reset.svg");
+                colorize-icon: true;
+
+                enabled: root.started;
+                clicked() => {
+                    status = Interval.Focus;
+                    sessionCount = 1;
+                    value = getDuration(Interval.Focus);
+                    timer.running = false;
+                    root.started = false;
+                }
+            }
+
+            Button {
+                text: "Skip";
+                icon: @image-url("./icons/skip.svg");
+                colorize-icon: true;
+                enabled: root.started;
+                clicked() => {
+                    if status == Interval.Focus {
+                        sessionCount = sessionCount + 1;
+                    }
+                    System.notify(nextMessage(status));
+                    status = nextInterval(status, sessionCount);
+                    value = getDuration(status);
+                }
+            }
+        }
+    }
+}

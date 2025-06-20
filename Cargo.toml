@@ -1,0 +1,11 @@
+[package]
+name = "temporis"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+notify-rust = "4.11.7"
+slint = "1.11.0"
+
+[target.'cfg(target_os = "linux")'.dependencies]
+zbus = "5.7.1"
