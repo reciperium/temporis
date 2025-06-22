@@ -1,5 +1,14 @@
-import { AboutSlint, Button, VerticalBox, ProgressIndicator, Spinner } from "std-widgets.slint";
-import { Palette, StyleMetrics } from "std-widgets.slint";
+import {
+    AboutSlint,
+    Button,
+    VerticalBox,
+    ProgressIndicator,
+    Spinner,
+    Palette,
+    StyleMetrics,
+    HorizontalBox, LineEdit
+} from "std-widgets.slint";
+
 
 export enum Interval {
     Focus, ShortBreak, LongBreak
@@ -19,15 +28,12 @@ export global System {
     callback notify(message: Message);
 }
 
-export component Pomodoro inherits Window {
-    min-width: 300px;
-    min-height: 450px;
-    icon: @image-url("./icons/logo.svg");
-
+export component Pomodoro {
+    callback navigate(page: int);
     property <bool> started: false;
     property <Interval> status: Interval.Focus;
     property <int> value: getDuration(status);
-    property <int> sessionCount: System.sessions;
+    property <int> sessionCount: 1;
 
     property <[Message]> focus_messages: [
         {
@@ -133,16 +139,23 @@ export component Pomodoro inherits Window {
     }
 
     VerticalBox {
-        // Rectangle {
-        //     width: 100%;
-        //     height: 1px;
-        //     background: Palette.alternate-foreground;
-        // }
 
         alignment: center;
         spacing: 20px;
 
-        HorizontalLayout {
+        HorizontalBox {
+            alignment: end;
+            Button {
+                text: "Settings";
+                icon: @image-url("./icons/settings.svg");
+                colorize-icon: true;
+                clicked() => {
+                    navigate(1);
+                }
+            }
+        }
+
+        HorizontalBox {
             alignment: center;
             Text {
                 text: intervalToString(status);
@@ -150,9 +163,9 @@ export component Pomodoro inherits Window {
             }
         }
 
-        HorizontalLayout {
+        HorizontalBox {
             alignment: center;
-            VerticalLayout {
+            VerticalBox {
                 Text {
                     text: displayTime(value);
                     font-size: 40pt;
@@ -166,7 +179,7 @@ export component Pomodoro inherits Window {
             progress: 1 - value / getDuration(status);
         }
 
-        HorizontalLayout {
+        HorizontalBox {
             alignment: center;
             Text {
                 visible: status == Interval.Focus;
@@ -174,7 +187,7 @@ export component Pomodoro inherits Window {
             }
         }
 
-        HorizontalLayout {
+        HorizontalBox {
             alignment: center;
             spacing: 5px;
             Button {
@@ -221,6 +234,103 @@ export component Pomodoro inherits Window {
                     value = getDuration(status);
                 }
             }
+        }
+    }
+}
+
+export component Settings {
+    callback navigate(page: int);
+    //height: 100%;
+    VerticalBox {
+        alignment: space-between;
+
+        Button {
+            text: "Back";
+            icon: @image-url("./icons/left.svg");
+            colorize-icon: true;
+            clicked() => {
+                navigate(0);
+            }
+        }
+
+        VerticalLayout {
+            spacing: 5px;
+            Text {
+                text: "Interval duration";
+            }
+
+            HorizontalLayout {
+
+                LineEdit {
+                    placeholder-text: "Interval duration";
+                    input-type: number;
+                    text: System.focus_duration / 60;
+                    width: 50%;
+                    edited(text) => {
+                        System.focus_duration = text.to-float() * 60;
+                    }
+                }
+            }
+        }
+
+        VerticalLayout {
+            spacing: 5px;
+            Text {
+                text: "Short break duration";
+            }
+
+            LineEdit {
+                placeholder-text: "Short break duration";
+                input-type: number;
+                text: System.short_break_duration / 60;
+            }
+        }
+
+        VerticalLayout {
+            spacing: 5px;
+            Text {
+                text: "Long break duration";
+            }
+
+            LineEdit {
+                placeholder-text: "Long break duration";
+                input-type: number;
+                text: System.long_break_duration / 60;
+            }
+        }
+
+        VerticalLayout {
+            spacing: 5px;
+            Text {
+                text: "Sessions before long break";
+            }
+
+            LineEdit {
+                placeholder-text: "Sessions before long break";
+                input-type: number;
+                text: System.sessions;
+            }
+        }
+
+        HorizontalBox { }
+    }
+}
+
+export component AppWindow inherits Window {
+    min-width: 300px;
+    min-height: 450px;
+    icon: @image-url("./icons/logo.svg");
+
+    in-out property <int> current_page: 0;
+
+    if (root.current_page == 0): Pomodoro {
+        navigate(page) => {
+            root.current_page = page;
+        }
+    }
+    if (root.current_page == 1): Settings {
+        navigate(page) => {
+            root.current_page = page;
         }
     }
 }
