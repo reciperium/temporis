@@ -1,2 +1,12 @@
-view:  # Start the slint-viewer with auto-reload enabled
+# Start the slint-viewer with auto-reload enabled
+view:
     slint-viewer  --auto-reload ui/main.slint
+
+# Build the binary
+build__bin:
+    nix build .#temporis
+
+# Install the application for debug
+fresh-install:
+    nix profile remove temporis || true
+    nix profile install .#temporis

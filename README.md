@@ -1,6 +1,11 @@
 # Temporis
 
 A pomodoro timer focused on productivity and attention.
+## Installation
+
+```sh
+nix profile install github:reciperium/temporis
+```
 
 ## Features
 

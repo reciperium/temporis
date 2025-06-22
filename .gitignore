@@ -1,8 +1,7 @@
+.zed
 .direnv
 result
 target
-
-
 # Added by cargo
 
 /target
