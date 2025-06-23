@@ -17,14 +17,17 @@
       crane,
       ...
     }:
-    # https://flake.parts/
-    flake-parts.lib.mkFlake { inherit inputs; } {
-      debug = true;
+    let
       systems = [
         "x86_64-linux"
         "aarch64-darwin"
         "x86_64-darwin"
       ];
+    in
+    # https://flake.parts/
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      debug = true;
+      systems = systems;
       perSystem =
         {
           pkgs,
@@ -40,13 +43,21 @@
           craneLib = (crane.mkLib pkgs).overrideToolchain toolchain;
 
           # app
+          meta = {
+            description = "A Pomodoro application helping you stay focused, fresh and healthy";
+            longDescription = "Temporis is a Pomodoro application designed to help you seamlessly switch between focused work and periods of diffused thinking";
+            homepage = "https://github.com/reciperium/temporis";
+            license = with pkgs; lib.licenses.gpl3;
+            platforms = systems;
+            mainProgram = "temporis";
+          };
           temporis-desktop = pkgs.makeDesktopItem {
             name = "temporis";
             exec = "temporis"; # recommended way, so users can wrap around it?
             desktopName = "Temporis";
             genericName = "Pomodoro Application";
             icon = "org.reciperium.temporis";
-            comment = "A simple yet powerful pomodoro timer with customizable intervals and breaks";
+            comment = "Focus on intervals and take breaks to stimulate your productivity";
             categories = [ "Utility" ];
             terminal = false;
             keywords = [
@@ -90,6 +101,7 @@
                   install -Dm644 ${temporis-desktop}/share/applications/*.desktop $out/share/applications/temporis.desktop
                 '';
               desktopItems = [ temporis-desktop ];
+              meta = meta;
             };
             default = self'.packages.temporis;
           };
