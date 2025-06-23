@@ -1,6 +1,9 @@
+<img src="./ui/icons/logo.svg" alt="logo" width="150" height="150">
+
 # Temporis
 
 A pomodoro timer focused on productivity and attention.
+
 ## Installation
 
 ```sh
@@ -10,7 +13,9 @@ nix profile install github:reciperium/temporis
 ## Features
 
 - Switch between focus work and diffusion modes
-- Automatically set "Do not disturb" mode during focus work sessions (KDE for now using dbus)
+- Notifications reminding you to stretch and hydrate
+- WIP: Configuration
+- WIP: Automatically set "Do not disturb" mode during focus work sessions (KDE for now using dbus)
 
 ---
 
@@ -24,3 +29,4 @@ nix profile install github:reciperium/temporis
 - [KDE kirigame in rust](https://develop.kde.org/docs/getting-started/kirigami/setup-rust/#build)
 - show progress in task bar: `com.canonical.Unity.LauncherEntry`
 - [Urgency levels](https://specifications.freedesktop.org/notification-spec/latest/urgency-levels.html)
+- [makeDesktopItem](https://nixos.org/manual/nixpkgs/stable/#trivial-builder-makeDesktopItem) for NixOS
