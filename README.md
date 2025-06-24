@@ -4,6 +4,8 @@
 
 A pomodoro timer focused on productivity and attention.
 
+_[temporis-logo](https://github.com/reciperium/temporis/blob/main/ui/icons/logo.svg) © 2025 by [Lara Sitruk](https://www.instagram.com/lazomicreative/) is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)_
+
 ## Installation
 
 ```sh
