@@ -26,6 +26,11 @@ export global System {
     in-out property <int> sessions: 4;
 
     callback notify(message: Message);
+
+    callback save_focus(value: int);
+    callback save_short_break(value: int);
+    callback save_long_break(value: int);
+    callback save_sessions(value: int);
 }
 
 export component Pomodoro {
@@ -268,6 +273,7 @@ export component Settings {
                     width: 50%;
                     edited(text) => {
                         System.focus_duration = text.to-float() * 60;
+                        System.save_focus(System.focus_duration);
                     }
                 }
             }
@@ -283,6 +289,10 @@ export component Settings {
                 placeholder-text: "Short break duration";
                 input-type: number;
                 text: System.short_break_duration / 60;
+                edited(text) => {
+                    System.short_break_duration = text.to-float() * 60;
+                    System.save_focus(System.short_break_duration);
+                }
             }
         }
 
@@ -296,6 +306,10 @@ export component Settings {
                 placeholder-text: "Long break duration";
                 input-type: number;
                 text: System.long_break_duration / 60;
+                edited(text) => {
+                    System.long_break_duration = text.to-float() * 60;
+                    System.save_focus(System.long_break_duration);
+                }
             }
         }
 
@@ -309,6 +323,10 @@ export component Settings {
                 placeholder-text: "Sessions before long break";
                 input-type: number;
                 text: System.sessions;
+                edited(text) => {
+                    System.sessions = text.to-float() * 60;
+                    System.save_focus(System.sessions);
+                }
             }
         }
 
@@ -320,6 +338,7 @@ export component AppWindow inherits Window {
     min-width: 300px;
     min-height: 450px;
     icon: @image-url("./icons/logo.svg");
+    title: "Temporis";
 
     in-out property <int> current_page: 0;
 
