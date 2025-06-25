@@ -41,7 +41,14 @@
           fenix = inputs'.fenix.packages;
           toolchain = fenix.${rustChannel}.toolchain;
           craneLib = (crane.mkLib pkgs).overrideToolchain toolchain;
-
+          ldLibraryPath =
+            with pkgs;
+            lib.makeLibraryPath [
+              wayland
+              libxkbcommon
+              fontconfig
+              libGL
+            ];
           # app
           meta = {
             description = "A Pomodoro application helping you stay focused, fresh and healthy";
@@ -83,13 +90,7 @@
               postInstall =
                 with pkgs;
                 lib.optionalString stdenv.isLinux ''
-                  wrapProgram $out/bin/temporis --set LD_LIBRARY_PATH "${
-                    lib.makeLibraryPath [
-                      wayland
-                      libxkbcommon
-                      fontconfig
-                    ]
-                  }"
+                  wrapProgram $out/bin/temporis --set LD_LIBRARY_PATH "${ldLibraryPath}"
 
                   # install icon
                   mkdir -p "$out/share/icons/hicolor/scalable/apps"
@@ -129,14 +130,7 @@
               echo "Welcome to the rust devshell!"
             '';
 
-            LD_LIBRARY_PATH = "$LD_LIBRARY_PATH:${
-              with pkgs;
-              lib.makeLibraryPath [
-                wayland
-                libxkbcommon
-                fontconfig
-              ]
-            }";
+            LD_LIBRARY_PATH = "$LD_LIBRARY_PATH:${ldLibraryPath}";
 
             # PKG_CONFIG_PATH = "$PKG_CONFIG_PATH:${with pkgs; lib.makeLibraryPath [ dbus.dev ]}/pkgconfig/";
             # PKG_CONFIG_PATH = "$PKG_CONFIG_PATH:${with pkgs; dbus.dev}";
