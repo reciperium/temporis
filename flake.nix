@@ -131,9 +131,6 @@
             '';
 
             LD_LIBRARY_PATH = "$LD_LIBRARY_PATH:${ldLibraryPath}";
-
-            # PKG_CONFIG_PATH = "$PKG_CONFIG_PATH:${with pkgs; lib.makeLibraryPath [ dbus.dev ]}/pkgconfig/";
-            # PKG_CONFIG_PATH = "$PKG_CONFIG_PATH:${with pkgs; dbus.dev}";
           };
         };
     };
