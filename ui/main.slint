@@ -19,41 +19,29 @@ struct Message {
     body: string,
 }
 
-export global System {
+export global ExternalSystem {
+    // default values
     in-out property <int> focus_duration: 1500; // 25 minutes
     in-out property <int> short_break_duration: 300; // 5 minutes
     in-out property <int> long_break_duration: 1200; // 20 minutes
     in-out property <int> sessions: 4;
 
     callback notify(message: Message);
-
     callback save_focus(value: int);
     callback save_short_break(value: int);
     callback save_long_break(value: int);
     callback save_sessions(value: int);
-
-    pure public function getDuration(counter: Interval) -> int {
-        if (counter == Interval.Focus) {
-            // return 1500; // 25 minutes
-            return System.focus_duration;
-        } else if (counter == Interval.ShortBreak) {
-            // return 300; // 5 minutes
-            return System.short_break_duration;
-        } else {
-            // return 1200; // 20 minutes
-            return System.long_break_duration;
-        }
-    }
 }
 
-export component Pomodoro {
-    callback navigate(page: int);
-    property <bool> started: false;
-    property <Interval> status: Interval.Focus;
-    property <int> value: System.getDuration(status);
-    property <int> sessionCount: 1;
+export global System {
+    // global values
+    in-out property <Interval> status: Interval.Focus;
+    in-out property <int> value: System.getDuration(status);
+    in-out property <bool> started: false;
+    in-out property <int> sessionCount: 1;
+    in-out property <bool> running: false;
 
-    property <[Message]> focus_messages: [
+    out property <[Message]> focus_messages: [
         {
             summary: "Interval Ended",
             body: "Time for a breather! Hydrate with some water and stretch a bit"
@@ -71,13 +59,13 @@ export component Pomodoro {
             body: "Break time! How about a short walk or some light stretching to clear your head?"
         },
     ];
-    property <[Message]> short_break_messages: [
+    out property <[Message]> short_break_messages: [
         { summary: "Break Ended", body: "Time to focus again! Keep up the good work!" },
         { summary: "Break Ended", body: "Great job! Let's get back to work!" },
         { summary: "Break Ended", body: "Ready to dive back in? Let's go!" },
         { summary: "Break Ended", body: "Focus time again. You got this!" },
     ];
-    property <[Message]> long_break_messages: [
+    out property <[Message]> long_break_messages: [
         {
             summary: "Break Ended",
             body: "Time to get back to it. You're refreshed and ready!"
@@ -86,18 +74,41 @@ export component Pomodoro {
         { summary: "Break Ended", body: "Feeling recharged? Let's finish strong!" },
         { summary: "Break Ended", body: "Focus time again. You got this!" },
     ];
-    property <int> message_count: 0;
+    in-out property <int> message_count: 0;
+
+    pure public function getDuration(counter: Interval) -> int {
+        if (counter == Interval.Focus) {
+            // return 1500; // 25 minutes
+            return ExternalSystem.focus_duration;
+        } else if (counter == Interval.ShortBreak) {
+            // return 300; // 5 minutes
+            return ExternalSystem.short_break_duration;
+        } else {
+            // return 1200; // 20 minutes
+            return ExternalSystem.long_break_duration;
+        }
+    }
+
     pure function nextMessage(finished_interval: Interval) -> Message {
         if finished_interval == Interval.Focus {
-            return focus_messages[mod(sessionCount, 3)];
+            return System.focus_messages[mod(System.sessionCount, 3)];
         } else if finished_interval == Interval.ShortBreak {
 
-            return short_break_messages[mod(sessionCount, 3)];
+            return System.short_break_messages[mod(System.sessionCount, 3)];
         } else if finished_interval == Interval.LongBreak {
 
-            return long_break_messages[mod(sessionCount, 3)];
+            return System.long_break_messages[mod(System.sessionCount, 3)];
         }
         return { summary: "Error", body: "Unexpected interval detected" };
+    }
+
+    public function next() {
+        if System.status == Interval.Focus {
+            System.sessionCount = System.sessionCount + 1;
+        }
+        ExternalSystem.notify(nextMessage(System.status));
+        System.status = System.nextInterval(System.status, System.sessionCount);
+        System.value = System.getDuration(System.status);
     }
 
     pure function nextInterval(interval: Interval, sessionCount: int) -> Interval {
@@ -113,6 +124,27 @@ export component Pomodoro {
         return Interval.Focus;
     }
 
+    public function toggleStart() {
+        if System.value > 0 {
+            System.running = !System.running;
+        }
+        // Only on start we set the started variable to true
+        if (!System.started) {
+            System.started = true;
+        }
+    }
+    public function reset() {
+        System.status = Interval.Focus;
+        System.sessionCount = 1;
+        System.value = System.getDuration(Interval.Focus);
+        System.running = false;
+        System.started = false;
+    }
+}
+
+export component Pomodoro {
+    callback navigate(page: int);
+
     pure function intervalToString(interval: Interval) -> string {
         if (interval == Interval.Focus) {
             return "Focus";
@@ -125,60 +157,6 @@ export component Pomodoro {
 
     pure function displayTime(seconds: int) -> string {
         floor(seconds / 60) + ":" + (mod(seconds, 60) / 1 < 10 ? "0" : "") + floor(mod(seconds, 60) / 1)
-    }
-    function toggleStart() {
-        if value > 0 {
-            timer.running = !timer.running;
-        }
-        // Only on start we set the root.started variable to true
-        if (!root.started) {
-            root.started = true;
-        }
-    }
-    function reset() {
-        status = Interval.Focus;
-        sessionCount = 1;
-        value = System.getDuration(Interval.Focus);
-        timer.running = false;
-        root.started = false;
-    }
-
-    function next() {
-        if status == Interval.Focus {
-            sessionCount = sessionCount + 1;
-        }
-        System.notify(nextMessage(status));
-        status = nextInterval(status, sessionCount);
-        value = System.getDuration(status);
-    }
-
-    key-handler := FocusScope {
-        key-pressed(event) => {
-            if (event.text == "s") {
-                toggleStart();
-            }
-            if (event.text == "r") {
-                reset();
-            }
-            if (event.text == "k") {
-                next();
-            }
-            if (event.text == "c") {
-                navigate(1);
-            }
-            accept
-        }
-    }
-
-    timer := Timer {
-        interval: 1s;
-        running: false;
-        triggered() => {
-            value -= 1;
-            if (value == 0) {
-                next()
-            }
-        }
     }
 
     VerticalBox {
@@ -201,7 +179,7 @@ export component Pomodoro {
         HorizontalBox {
             alignment: center;
             Text {
-                text: intervalToString(status);
+                text: intervalToString(System.status);
                 font-size: 20pt;
             }
         }
@@ -210,7 +188,7 @@ export component Pomodoro {
             alignment: center;
             VerticalBox {
                 Text {
-                    text: displayTime(value);
+                    text: displayTime(System.value);
                     font-size: 40pt;
                     color: Palette.accent-background;
                     font-weight: 600;
@@ -219,14 +197,14 @@ export component Pomodoro {
         }
 
         ProgressIndicator {
-            progress: 1 - value / System.getDuration(status);
+            progress: 1 - System.value / System.getDuration(System.status);
         }
 
         HorizontalBox {
             alignment: center;
             Text {
-                visible: status == Interval.Focus;
-                text: "Session " + sessionCount;
+                visible: System.status == Interval.Focus;
+                text: "Session " + System.sessionCount;
             }
         }
 
@@ -234,11 +212,11 @@ export component Pomodoro {
             alignment: center;
             spacing: 5px;
             Button {
-                text: timer.running ? "Pause" : root.started ? "Continue" : "Start";
-                icon: timer.running ? @image-url("./icons/pause.svg") : @image-url("./icons/play.svg");
+                text: System.running ? "Pause" : System.started ? "Continue" : "Start";
+                icon: System.running ? @image-url("./icons/pause.svg") : @image-url("./icons/play.svg");
                 colorize-icon: true;
                 clicked() => {
-                    toggleStart();
+                    System.toggleStart();
                 }
             }
 
@@ -247,9 +225,9 @@ export component Pomodoro {
                 icon: @image-url("./icons/reset.svg");
                 colorize-icon: true;
 
-                enabled: root.started;
+                enabled: System.started;
                 clicked() => {
-                    reset();
+                    System.reset();
                 }
             }
 
@@ -257,9 +235,9 @@ export component Pomodoro {
                 text: "Skip";
                 icon: @image-url("./icons/skip.svg");
                 colorize-icon: true;
-                enabled: root.started;
+                enabled: System.started;
                 clicked() => {
-                    next();
+                    System.next();
                 }
             }
         }
@@ -301,11 +279,11 @@ export component Settings {
                 LineEdit {
                     placeholder-text: "Interval duration";
                     input-type: number;
-                    text: System.focus_duration / 60;
+                    text: ExternalSystem.focus_duration / 60;
                     width: 50%;
                     edited(text) => {
-                        System.focus_duration = text.to-float() * 60;
-                        System.save_focus(System.focus_duration);
+                        ExternalSystem.focus_duration = text.to-float() * 60;
+                        ExternalSystem.save_focus(ExternalSystem.focus_duration);
                     }
                 }
             }
@@ -320,10 +298,10 @@ export component Settings {
             LineEdit {
                 placeholder-text: "Short break duration";
                 input-type: number;
-                text: System.short_break_duration / 60;
+                text: ExternalSystem.short_break_duration / 60;
                 edited(text) => {
-                    System.short_break_duration = text.to-float() * 60;
-                    System.save_focus(System.short_break_duration);
+                    ExternalSystem.short_break_duration = text.to-float() * 60;
+                    ExternalSystem.save_focus(ExternalSystem.short_break_duration);
                 }
             }
         }
@@ -337,10 +315,10 @@ export component Settings {
             LineEdit {
                 placeholder-text: "Long break duration";
                 input-type: number;
-                text: System.long_break_duration / 60;
+                text: ExternalSystem.long_break_duration / 60;
                 edited(text) => {
-                    System.long_break_duration = text.to-float() * 60;
-                    System.save_focus(System.long_break_duration);
+                    ExternalSystem.long_break_duration = text.to-float() * 60;
+                    ExternalSystem.save_focus(ExternalSystem.long_break_duration);
                 }
             }
         }
@@ -354,10 +332,10 @@ export component Settings {
             LineEdit {
                 placeholder-text: "Sessions before long break";
                 input-type: number;
-                text: System.sessions;
+                text: ExternalSystem.sessions;
                 edited(text) => {
-                    System.sessions = text.to-float() * 60;
-                    System.save_focus(System.sessions);
+                    ExternalSystem.sessions = text.to-float() * 60;
+                    ExternalSystem.save_focus(ExternalSystem.sessions);
                 }
             }
         }
@@ -373,6 +351,42 @@ export component AppWindow inherits Window {
     title: "Temporis";
 
     in-out property <int> current_page: 0;
+
+    function navigate(page: int) {
+        root.current_page = page;
+    }
+
+    timer := Timer {
+        interval: 1s;
+        running: System.running;
+        triggered() => {
+            System.value -= 1;
+            if (System.value == 0) {
+                System.next()
+            }
+        }
+    }
+
+    key-handler := FocusScope {
+        key-pressed(event) => {
+            if (event.text == "s") {
+                System.toggleStart();
+            }
+            if (event.text == "r") {
+                System.reset();
+            }
+            if (event.text == "k") {
+                System.next();
+            }
+            if (event.text == "c") {
+                navigate(1);
+            }
+            if (event.text == "b") {
+                navigate(0);
+            }
+            accept
+        }
+    }
 
     if (root.current_page == 0): Pomodoro {
         navigate(page) => {
