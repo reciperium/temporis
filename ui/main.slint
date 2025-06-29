@@ -165,11 +165,11 @@ export component Pomodoro {
         spacing: 20px;
 
         HorizontalBox {
-            alignment: end;
+            alignment: start;
+
             Button {
-                text: "Settings";
                 icon: @image-url("./icons/settings.svg");
-                colorize-icon: true;
+                // colorize-icon: true;
                 clicked() => {
                     navigate(1);
                 }
@@ -215,6 +215,7 @@ export component Pomodoro {
                 text: System.running ? "Pause" : System.started ? "Continue" : "Start";
                 icon: System.running ? @image-url("./icons/pause.svg") : @image-url("./icons/play.svg");
                 colorize-icon: true;
+                primary: true;
                 clicked() => {
                     System.toggleStart();
                 }
@@ -259,12 +260,13 @@ export component Settings {
     VerticalBox {
         alignment: space-between;
 
-        Button {
-            text: "Back";
-            icon: @image-url("./icons/left.svg");
-            colorize-icon: true;
-            clicked() => {
-                navigate(0);
+        HorizontalBox {
+            alignment: start;
+            Button {
+                icon: @image-url("./icons/left.svg");
+                clicked() => {
+                    navigate(0);
+                }
             }
         }
 
