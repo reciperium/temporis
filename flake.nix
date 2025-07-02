@@ -63,7 +63,7 @@
             exec = "temporis"; # recommended way, so users can wrap around it?
             desktopName = "Temporis";
             genericName = "Pomodoro Application";
-            icon = "org.reciperium.temporis";
+            icon = "com.reciperium.temporis";
             comment = "Focus on intervals and take breaks to stimulate your productivity";
             categories = [ "Utility" ];
             terminal = false;
@@ -94,12 +94,12 @@
 
                   # install icon
                   mkdir -p "$out/share/icons/hicolor/scalable/apps"
-                  install -Dm644 ui/icons/logo.svg $out/share/icons/hicolor/scalable/apps/org.reciperium.temporis.svg
-                  # ln -s "ui/icons/logo.png" "$out/share/icons/hicolor/128x128/apps/org.reciperium.temporis.png"
+                  install -Dm644 ui/icons/logo.svg $out/share/icons/hicolor/scalable/apps/com.reciperium.temporis.svg
+                  # ln -s "ui/icons/logo.png" "$out/share/icons/hicolor/128x128/apps/com.reciperium.temporis.png"
 
                   # install desktop file
                   mkdir -p $out/share/applications
-                  install -Dm644 ${temporis-desktop}/share/applications/*.desktop $out/share/applications/temporis.desktop
+                  install -Dm644 ${temporis-desktop}/share/applications/*.desktop $out/share/applications/com.reciperium.temporis.desktop
                 '';
               desktopItems = [ temporis-desktop ];
               meta = meta;
