@@ -6,7 +6,8 @@ import {
     Spinner,
     Palette,
     StyleMetrics,
-    HorizontalBox, LineEdit
+    HorizontalBox,
+    LineEdit,
 } from "std-widgets.slint";
 
 
@@ -31,6 +32,8 @@ export global ExternalSystem {
     callback save_short_break(value: int);
     callback save_long_break(value: int);
     callback save_sessions(value: int);
+    callback update_progress(progress: float);
+    callback stop_progress();
 }
 
 export global System {
@@ -109,6 +112,7 @@ export global System {
         ExternalSystem.notify(nextMessage(System.status));
         System.status = System.nextInterval(System.status, System.sessionCount);
         System.value = System.getDuration(System.status);
+        ExternalSystem.stop_progress();
     }
 
     pure function nextInterval(interval: Interval, sessionCount: int) -> Interval {
@@ -139,6 +143,7 @@ export global System {
         System.value = System.getDuration(Interval.Focus);
         System.running = false;
         System.started = false;
+        ExternalSystem.stop_progress();
     }
 }
 
@@ -165,11 +170,11 @@ export component Pomodoro {
         spacing: 20px;
 
         HorizontalBox {
-            alignment: start;
+            alignment: end;
 
             Button {
                 icon: @image-url("./icons/settings.svg");
-                // colorize-icon: true;
+                colorize-icon: true;
                 clicked() => {
                     navigate(1);
                 }
@@ -341,8 +346,6 @@ export component Settings {
                 }
             }
         }
-
-        HorizontalBox { }
     }
 }
 
@@ -363,6 +366,10 @@ export component AppWindow inherits Window {
         running: System.running;
         triggered() => {
             System.value -= 1;
+            // Update progress every 10 seconds
+            if (mod(System.value, 10) == 0) {
+                ExternalSystem.update_progress(1 - System.value / System.getDuration(System.status));
+            }
             if (System.value == 0) {
                 System.next()
             }
@@ -371,6 +378,7 @@ export component AppWindow inherits Window {
 
     key-handler := FocusScope {
         key-pressed(event) => {
+            debug(event.text);
             if (event.text == "s") {
                 System.toggleStart();
             }

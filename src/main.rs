@@ -1,7 +1,8 @@
 use std::{cell::RefCell, rc::Rc};
 
 use notify_rust::{Hint, Notification, Urgency};
-use temporis::conf::Config;
+use slint::{CloseRequestResponse, set_xdg_app_id};
+use temporis::{conf::Config, platform::get_progress_integration, progress::ProgressIntegration};
 
 slint::slint! {
     export { ExternalSystem, AppWindow } from "ui/main.slint";
@@ -10,6 +11,9 @@ slint::slint! {
 fn main() -> Result<(), slint::PlatformError> {
     let config = Config::new().expect("config should be loaded correctly");
     let main_window = AppWindow::new()?;
+
+    _ = set_xdg_app_id("com.reciperium.temporis");
+
     main_window
         .global::<ExternalSystem>()
         .set_focus_duration(config.focus_duration);
@@ -87,5 +91,31 @@ fn main() -> Result<(), slint::PlatformError> {
             eprintln!("Error sending notification: {}", e);
         }
     });
+    let shared_progress_integration = Rc::new(RefCell::new(get_progress_integration()));
+    let progress_integration = shared_progress_integration.clone();
+    main_window
+        .global::<ExternalSystem>()
+        .on_update_progress(move |progress| {
+            let progress: f64 = progress as f64;
+            _ = progress_integration.borrow_mut().set_progress(progress);
+            _ = progress_integration.borrow().emit();
+        });
+
+    let progress_integration = shared_progress_integration.clone();
+    main_window
+        .global::<ExternalSystem>()
+        .on_stop_progress(move || {
+            _ = progress_integration.borrow_mut().stop();
+            _ = progress_integration.borrow().emit();
+        });
+
+    let progress_integration = shared_progress_integration.clone();
+    main_window.window().on_close_requested(move || {
+        println!("Bye byeee");
+        _ = progress_integration.borrow_mut().stop();
+        _ = progress_integration.borrow().emit();
+        CloseRequestResponse::HideWindow
+    });
+
     main_window.run()
 }
