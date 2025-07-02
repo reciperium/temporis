@@ -1,0 +1,25 @@
+name: "Deploy cache"
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install nix
+        uses: DeterminateSystems/nix-installer-action@main
+      - name: Cache build artifacts
+        uses: DeterminateSystems/flakehub-cache-action@main
+      - uses: cachix/cachix-action@v14
+        with:
+          name: reciperium
+          # If you chose API tokens for write access OR if you have a private cache
+          authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
+      - name: Build default package
+        run: |
+          nix build --json \
+          | jq -r '.[].outputs | to_entries[].value' \
+          | cachix push reciperium

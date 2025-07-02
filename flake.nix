@@ -107,31 +107,42 @@
             default = self'.packages.temporis;
           };
 
-          devShells.default = pkgs.mkShell {
-            name = "dev";
+          devShells = {
+            default = pkgs.mkShell {
+              name = "dev";
 
-            # Available packages on https://search.nixos.org/packages
-            buildInputs = with pkgs; [
-              just
-              (fenix.combine [
-                toolchain
+              # Available packages on https://search.nixos.org/packages
+              buildInputs = with pkgs; [
+                just
 
-                # https://doc.rust-lang.org/rustc/platform-support.html
-                # For more targets add:
-                # fenix.targets.aarch64-linux-android."${rustChannel}".rust-std
-                # fenix.targets.x86_64-linux-android."${rustChannel}".rust-std
+                (fenix.combine [
+                  toolchain
+                  # https://doc.rust-lang.org/rustc/platform-support.html
+                  # For more targets add:
+                  # fenix.targets.aarch64-linux-android."${rustChannel}".rust-std
+                  # fenix.targets.x86_64-linux-android."${rustChannel}".rust-std
+                ])
+
                 slint-viewer
                 slint-lsp
                 bacon
-              ])
-            ];
+                jq
+                cachix
+              ];
 
-            shellHook = ''
-              echo "Welcome to the rust devshell!"
-            '';
+              shellHook = ''
+                echo "Welcome to the rust devshell!"
+              '';
 
-            LD_LIBRARY_PATH = "$LD_LIBRARY_PATH:${ldLibraryPath}";
+              LD_LIBRARY_PATH = "\$LD_LIBRARY_PATH:${ldLibraryPath}";
+            };
           };
         };
     };
+  nixConfig = {
+    extra-substituters = [ "https://reciperium.cachix.org" ];
+    extra-trusted-public-keys = [
+      "reciperium.cachix.org-1:xAmT5McauMNqMlXkkyVzDzoDNO6G+Zo7gCAUYaPsGxQ="
+    ];
+  };
 }
