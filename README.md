@@ -1,10 +1,12 @@
-<img src="./ui/icons/logo.svg" alt="logo" width="150" height="150">
+<img src="./ui/icons/logo.svg" alt="logo" width="200" height="200">
+
+_[temporis-logo](https://github.com/reciperium/temporis/blob/main/ui/icons/logo.svg) © 2025 by [Lara Sitruk](https://www.instagram.com/lazomicreative/) is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)_
 
 # Temporis
 
 > A pomodoro timer focused on attention and well-being.
 
-_[temporis-logo](https://github.com/reciperium/temporis/blob/main/ui/icons/logo.svg) © 2025 by [Lara Sitruk](https://www.instagram.com/lazomicreative/) is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)_
+<img src="docs/images/screenshot-main.png" alt="screenshot main window" height="600">
 
 ## Installation
 
