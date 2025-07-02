@@ -16,7 +16,7 @@ nix profile install github:reciperium/temporis
 
 A pomodoro application can help you switch between focus mode, where you can explore a single idea in depth, and diffusion mode,
 where you can let your mind wonder around, and subconsciously explore other ideas, avoiding the [Einstellung effect](https://en.wikipedia.org/wiki/Einstellung_effect).
-On top of that, clear breaks give you space to stretch, move and hydrate.
+Furthermore, clear breaks give you space to stretch, move and hydrate.
 
 The app tries to consolidate nice features from different pomodoro apps, into a single one, with the style of
 the host operating system.
@@ -45,11 +45,11 @@ Reciperium builds applications for the mind and soul.
 
 ## Shortcuts
 
-<kbd>S</kbd> Start / Stop (pause)
-<kbd>R</kbd> Reset
-<kbd>K</kbd> Skip
-<kbd>C</kbd> Configuration
-<kbd>B</kbd> Back
+- <kbd>S</kbd> Start / Stop (pause)
+- <kbd>R</kbd> Reset
+- <kbd>K</kbd> Skip
+- <kbd>C</kbd> Configuration
+- <kbd>B</kbd> Back
 
 ---
 
