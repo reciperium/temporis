@@ -8,6 +8,7 @@ import {
     StyleMetrics,
     HorizontalBox,
     LineEdit,
+    Switch,
 } from "std-widgets.slint";
 import {ExternalSystem, Interval, System} from "../globals.slint";
 
@@ -113,6 +114,18 @@ export component Settings {
                     edited(text) => {
                         ExternalSystem.sessions = text.to-float() * 60;
                         ExternalSystem.save_focus(ExternalSystem.sessions);
+                    }
+                }
+            }
+
+            Row {
+
+                Switch {
+                    text: "Skip DnD (linux only)";
+                    checked: ExternalSystem.bypass_dnd;
+                    toggled() => {
+                        ExternalSystem.bypass_dnd = self.checked;
+                        ExternalSystem.save_bypass_dnd(ExternalSystem.bypass_dnd);
                     }
                 }
             }

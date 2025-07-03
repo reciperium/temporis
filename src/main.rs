@@ -55,7 +55,7 @@ fn main() -> Result<(), slint::PlatformError> {
             cfg_mut.short_break_duration = value;
             let r = cfg_mut.save();
             if let Err(e) = r {
-                eprintln!("Error saving focus duration: {}", e);
+                eprintln!("Error saving short break duration: {}", e);
             }
         });
 
@@ -67,7 +67,7 @@ fn main() -> Result<(), slint::PlatformError> {
             cfg_mut.long_break_duration = value;
             let r = cfg_mut.save();
             if let Err(e) = r {
-                eprintln!("Error saving focus duration: {}", e);
+                eprintln!("Error saving long break duration: {}", e);
             }
         });
 
@@ -79,14 +79,31 @@ fn main() -> Result<(), slint::PlatformError> {
             cfg_mut.sessions = value;
             let r = cfg_mut.save();
             if let Err(e) = r {
-                eprintln!("Error saving focus duration: {}", e);
+                eprintln!("Error saving sessions amount: {}", e);
+            }
+        });
+
+    let cfg_clone5 = shared_cfg.clone();
+    main_window
+        .global::<ExternalSystem>()
+        .on_save_bypass_dnd(move |value| {
+            let mut cfg_mut = cfg_clone5.borrow_mut();
+            cfg_mut.bypass_dnd = value;
+            let r = cfg_mut.save();
+            if let Err(e) = r {
+                eprintln!("Error saving bypass dnd: {}", e);
             }
         });
 
     main_window.global::<ExternalSystem>().on_notify(|msg| {
         let summary = msg.summary.to_owned();
         let body = msg.body.to_owned();
-        let message = OsMessage::new(summary, body, Urgency::Critical);
+        let urgency = if msg.critical {
+            Urgency::Critical
+        } else {
+            Urgency::Normal
+        };
+        let message = OsMessage::new(summary, body, urgency);
         let notification = get_notifications_integration();
         let res = notification.send(&message);
 
