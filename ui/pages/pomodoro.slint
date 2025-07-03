@@ -1,0 +1,115 @@
+import {
+    AboutSlint,
+    Button,
+    VerticalBox,
+    ProgressIndicator,
+    Spinner,
+    Palette,
+    StyleMetrics,
+    HorizontalBox,
+    LineEdit,
+} from "std-widgets.slint";
+import {ExternalSystem, Interval, System} from "../globals.slint";
+
+export component Pomodoro {
+    callback navigate(page: int);
+
+    pure function intervalToString(interval: Interval) -> string {
+        if (interval == Interval.Focus) {
+            return "Focus";
+        } else if (interval == Interval.ShortBreak) {
+            return "Short Break";
+        } else {
+            return "Long Break";
+        }
+    }
+
+    pure function displayTime(seconds: int) -> string {
+        floor(seconds / 60) + ":" + (mod(seconds, 60) / 1 < 10 ? "0" : "") + floor(mod(seconds, 60) / 1)
+    }
+
+    VerticalBox {
+
+        alignment: center;
+        spacing: 20px;
+
+        HorizontalBox {
+            alignment: end;
+
+            Button {
+                icon: @image-url("../icons/settings.svg");
+                colorize-icon: true;
+                clicked() => {
+                    navigate(1);
+                }
+            }
+        }
+
+        HorizontalBox {
+            alignment: center;
+            Text {
+                text: intervalToString(System.status);
+                font-size: 20pt;
+            }
+        }
+
+        HorizontalBox {
+            alignment: center;
+            VerticalBox {
+                Text {
+                    text: displayTime(System.value);
+                    font-size: 40pt;
+                    color: Palette.accent-background;
+                    font-weight: 600;
+                }
+            }
+        }
+
+        ProgressIndicator {
+            progress: 1 - System.value / System.getDuration(System.status);
+        }
+
+        HorizontalBox {
+            alignment: center;
+            Text {
+                visible: System.status == Interval.Focus;
+                text: "Session " + System.sessionCount;
+            }
+        }
+
+        HorizontalBox {
+            alignment: center;
+            spacing: 5px;
+            Button {
+                text: System.running ? "Pause" : System.started ? "Continue" : "Start";
+                icon: System.running ? @image-url("../icons/pause.svg") : @image-url("../icons/play.svg");
+                colorize-icon: true;
+                primary: true;
+                clicked() => {
+                    System.toggleStart();
+                }
+            }
+
+            Button {
+                text: "Reset";
+                icon: @image-url("../icons/reset.svg");
+                colorize-icon: true;
+
+                enabled: System.started;
+                clicked() => {
+                    System.reset();
+                }
+            }
+
+            Button {
+                text: "Skip";
+                icon: @image-url("../icons/skip.svg");
+                colorize-icon: true;
+                enabled: System.started;
+                clicked() => {
+                    System.next();
+                }
+            }
+        }
+    }
+}
