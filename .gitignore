@@ -6,4 +6,4 @@ target
 
 /target
 todo.md
-.qcow2
+*.qcow2

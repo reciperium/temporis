@@ -13,6 +13,7 @@ import {ExternalSystem, Interval, System} from "../globals.slint";
 
 export component Pomodoro {
     callback navigate(page: int);
+    width: 100%;
 
     pure function intervalToString(interval: Interval) -> string {
         if (interval == Interval.Focus) {
@@ -65,8 +66,10 @@ export component Pomodoro {
             }
         }
 
-        ProgressIndicator {
-            progress: 1 - System.value / System.getDuration(System.status);
+        HorizontalBox {
+            ProgressIndicator {
+                progress: 1 - System.value / System.getDuration(System.status);
+            }
         }
 
         HorizontalBox {
@@ -79,7 +82,7 @@ export component Pomodoro {
 
         HorizontalBox {
             alignment: center;
-            spacing: 5px;
+            spacing: 5pt;
             Button {
                 text: System.running ? "Pause" : System.started ? "Continue" : "Start";
                 icon: System.running ? @image-url("../icons/pause.svg") : @image-url("../icons/play.svg");
