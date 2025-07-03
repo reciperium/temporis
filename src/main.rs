@@ -1,8 +1,14 @@
 use std::{cell::RefCell, rc::Rc};
 
-use notify_rust::{Hint, Notification, Urgency};
 use slint::{CloseRequestResponse, set_xdg_app_id};
-use temporis::{conf::Config, platform::get_progress_integration, progress::ProgressIntegration};
+use temporis::{
+    conf::Config,
+    platform::{get_notifications_integration, get_progress_integration},
+    platform_interfaces::{
+        notifications::{NotificationIntegration, OsMessage, Urgency},
+        progress::ProgressIntegration,
+    },
+};
 
 slint::slint! {
     export { ExternalSystem, AppWindow } from "ui/main.slint";
@@ -80,13 +86,10 @@ fn main() -> Result<(), slint::PlatformError> {
     main_window.global::<ExternalSystem>().on_notify(|msg| {
         let summary = msg.summary.to_owned();
         let body = msg.body.to_owned();
-        let res = Notification::new()
-            .summary(&summary)
-            .body(&body)
-            .urgency(Urgency::Critical)
-            .hint(Hint::Category("class".to_owned()))
-            .appname("Temporis")
-            .show();
+        let message = OsMessage::new(summary, body, Urgency::Critical);
+        let notification = get_notifications_integration();
+        let res = notification.send(&message);
+
         if let Err(e) = res {
             eprintln!("Error sending notification: {}", e);
         }
@@ -111,7 +114,6 @@ fn main() -> Result<(), slint::PlatformError> {
 
     let progress_integration = shared_progress_integration.clone();
     main_window.window().on_close_requested(move || {
-        println!("Bye byeee");
         _ = progress_integration.borrow_mut().stop();
         _ = progress_integration.borrow().emit();
         CloseRequestResponse::HideWindow

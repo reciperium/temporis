@@ -3,7 +3,7 @@ use zbus::{
     zvariant::{DeserializeDict, SerializeDict, Type},
 };
 
-use crate::progress::{ProgressError, ProgressIntegration};
+use crate::platform_interfaces::progress::{ProgressError, ProgressIntegration};
 
 #[derive(Default, SerializeDict, DeserializeDict, Type, PartialEq, Debug)]
 #[zvariant(signature = "dict")]

@@ -1,4 +1,5 @@
-use crate::progress::{ProgressError, ProgressIntegration};
+mod notifications;
+use crate::platform_interfaces::progress::{ProgressError, ProgressIntegration};
 
 #[derive(Debug, Default, Clone, Copy)]
 struct DummyProgress;
@@ -19,4 +20,8 @@ impl ProgressIntegration for DummyProgress {
 
 pub fn get_progress_integration() -> impl ProgressIntegration {
     progress::UnityLauncher::default()
+}
+
+pub fn get_notifications_integration() -> impl NotificationIntegration {
+    notifications::MacOsNotificationIntegration
 }

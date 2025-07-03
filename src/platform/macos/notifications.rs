@@ -1,0 +1,22 @@
+use notify_rust::{Hint, Notification};
+
+use crate::platform_interfaces::notifications::{
+    NotificationError, NotificationIntegration, OsMessage,
+};
+
+pub struct MacOsNotificationIntegration;
+
+impl NotificationIntegration for MacOsNotificationIntegration {
+    fn send(&self, message: &OsMessage) -> Result<(), NotificationError> {
+        let res = Notification::new()
+            .summary(&message.summary)
+            .body(&message.body)
+            .appname("Temporis")
+            .show();
+
+        res.map_err(|err| NotificationError::SendFailed {
+            reason: err.to_string(),
+        })
+        .map(|_| ())
+    }
+}

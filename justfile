@@ -10,3 +10,6 @@ build__bin:
 fresh-install:
     nix profile remove temporis || true
     nix profile install --show-trace .#temporis
+
+bundle__appimage:
+    nix bundle --bundler github:ralismark/nix-appimage .#temporis
