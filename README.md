@@ -11,7 +11,7 @@ _[temporis-logo](https://github.com/reciperium/temporis/blob/main/ui/icons/logo.
 ## Installation
 
 ```sh
-nix profile install github:reciperium/temporis
+nix profile add github:reciperium/temporis
 ```
 
 ## Why?
