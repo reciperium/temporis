@@ -23,10 +23,14 @@ export component Settings {
         }
     }
 
-    VerticalBox {
-        alignment: space-between;
+    height: 100%;
+    VerticalLayout {
+        alignment: space-around;
+        // width: 80%;
 
-        HorizontalBox {
+        // padding: 10px;
+
+        HorizontalLayout {
             alignment: start;
             Button {
                 icon: @image-url("../icons/left.svg");
@@ -36,75 +40,89 @@ export component Settings {
             }
         }
 
-        VerticalLayout {
-            spacing: 5px;
-            Text {
-                text: "Interval duration";
-            }
+        GridLayout {
+            spacing-horizontal: 10px;
+            spacing-vertical: 20px;
 
-            HorizontalLayout {
+            Row {
+                Text {
+
+                    text: "Interval duration";
+                    vertical-alignment: center;
+                }
 
                 LineEdit {
+                    width: 40pt;
                     placeholder-text: "Interval duration";
                     input-type: number;
                     text: ExternalSystem.focus_duration / 60;
-                    width: 50%;
                     edited(text) => {
                         ExternalSystem.focus_duration = text.to-float() * 60;
                         ExternalSystem.save_focus(ExternalSystem.focus_duration);
                     }
                 }
             }
-        }
 
-        VerticalLayout {
-            spacing: 5px;
-            Text {
-                text: "Short break duration";
+            Row {
+                Text {
+                    text: "Short break duration";
+                    vertical-alignment: center;
+                }
+
+                LineEdit {
+                    width: 40pt;
+                    placeholder-text: "Short break duration";
+                    input-type: number;
+                    text: ExternalSystem.short_break_duration / 60;
+                    edited(text) => {
+                        ExternalSystem.short_break_duration = text.to-float() * 60;
+                        ExternalSystem.save_focus(ExternalSystem.short_break_duration);
+                    }
+                }
             }
 
-            LineEdit {
-                placeholder-text: "Short break duration";
-                input-type: number;
-                text: ExternalSystem.short_break_duration / 60;
-                edited(text) => {
-                    ExternalSystem.short_break_duration = text.to-float() * 60;
-                    ExternalSystem.save_focus(ExternalSystem.short_break_duration);
+            Row {
+                Text {
+                    text: "Long break duration";
+                    vertical-alignment: center;
+                }
+
+                LineEdit {
+                    width: 40pt;
+                    placeholder-text: "Long break duration";
+                    input-type: number;
+                    text: ExternalSystem.long_break_duration / 60;
+                    edited(text) => {
+                        ExternalSystem.long_break_duration = text.to-float() * 60;
+                        ExternalSystem.save_focus(ExternalSystem.long_break_duration);
+                    }
+                }
+            }
+
+            Row {
+                Text {
+                    text: "Sessions before long break";
+                    vertical-alignment: center;
+                }
+
+                LineEdit {
+                    width: 40pt;
+                    placeholder-text: "Sessions before long break";
+                    input-type: number;
+                    text: ExternalSystem.sessions;
+                    edited(text) => {
+                        ExternalSystem.sessions = text.to-float() * 60;
+                        ExternalSystem.save_focus(ExternalSystem.sessions);
+                    }
                 }
             }
         }
 
-        VerticalLayout {
-            spacing: 5px;
+        HorizontalBox {
+            alignment: center;
             Text {
-                text: "Long break duration";
-            }
-
-            LineEdit {
-                placeholder-text: "Long break duration";
-                input-type: number;
-                text: ExternalSystem.long_break_duration / 60;
-                edited(text) => {
-                    ExternalSystem.long_break_duration = text.to-float() * 60;
-                    ExternalSystem.save_focus(ExternalSystem.long_break_duration);
-                }
-            }
-        }
-
-        VerticalLayout {
-            spacing: 5px;
-            Text {
-                text: "Sessions before long break";
-            }
-
-            LineEdit {
-                placeholder-text: "Sessions before long break";
-                input-type: number;
-                text: ExternalSystem.sessions;
-                edited(text) => {
-                    ExternalSystem.sessions = text.to-float() * 60;
-                    ExternalSystem.save_focus(ExternalSystem.sessions);
-                }
+                text: "reciperium.com";
+                vertical-alignment: center;
             }
         }
     }
