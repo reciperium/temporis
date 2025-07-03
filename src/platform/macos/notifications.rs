@@ -1,4 +1,4 @@
-use notify_rust::{Hint, Notification};
+use notify_rust::Notification;
 
 use crate::platform_interfaces::notifications::{
     NotificationError, NotificationIntegration, OsMessage,
