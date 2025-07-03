@@ -68,3 +68,5 @@ Reciperium builds applications for the mind and soul.
 - show progress in task bar: `com.canonical.Unity.LauncherEntry`
 - [Urgency levels](https://specifications.freedesktop.org/notification-spec/latest/urgency-levels.html)
 - [makeDesktopItem](https://nixos.org/manual/nixpkgs/stable/#trivial-builder-makeDesktopItem) for NixOS
+
+<img src="./docs/images/made-with-slint.png" alt="made with slint logo" width="200">
