@@ -10,11 +10,15 @@
       url = "github:ipetkov/crane";
     };
 
+    gitignore.url = "github:hercules-ci/gitignore.nix";
+    gitignore.inputs.nixpkgs.follows = "nixpkgs";
+
   };
   outputs =
     inputs@{
       flake-parts,
       crane,
+      gitignore,
       ...
     }:
     let
@@ -36,6 +40,7 @@
           ...
         }:
         let
+          gitignoreSource = gitignore.lib.gitignoreSource;
           # rust
           rustChannel = "stable";
           fenix = inputs'.fenix.packages;
@@ -77,7 +82,7 @@
         {
           packages = {
             temporis = craneLib.buildPackage {
-              src = ./.;
+              src = gitignoreSource ./.;
               strictDeps = true;
               buildInputs =
                 with pkgs;
