@@ -13,3 +13,6 @@ fresh-install:
 
 bundle__appimage:
     nix bundle --bundler github:ralismark/nix-appimage .#temporis
+
+bundle__appimage2:
+    nix bundle --bundler github:nix-community/nix-bundle .#temporis

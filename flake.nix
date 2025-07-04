@@ -53,6 +53,11 @@
               libxkbcommon
               fontconfig
               libGL
+
+              # X11
+              xorg.libX11
+              xorg.libXcursor
+              xorg.libXi
             ];
           # app
           meta = {
@@ -89,14 +94,24 @@
                 [ ]
                 ++ lib.optionals stdenv.isLinux [
                   makeWrapper
+
+                  wayland
+                  libxkbcommon
+                  fontconfig
+                  libGL
+
+                  xorg.libX11
+                  xorg.libXcursor
+                  xorg.libXi
                 ];
 
               # I should probably use patchelf but I don't know how
               postInstall =
                 with pkgs;
                 lib.optionalString stdenv.isLinux ''
-                  wrapProgram $out/bin/temporis --set LD_LIBRARY_PATH "${ldLibraryPath}"
-
+                  wrapProgram $out/bin/temporis \
+                    --set LD_LIBRARY_PATH "${ldLibraryPath}" \
+                    --set FONTCONFIG_FILE "${makeFontsConf { fontDirectories = [ freefont_ttf ]; }}"
                   # install icon
                   mkdir -p "$out/share/icons/hicolor/scalable/apps"
                   install -Dm644 ui/icons/logo.svg $out/share/icons/hicolor/scalable/apps/com.reciperium.temporis.svg
@@ -108,6 +123,9 @@
                 '';
               desktopItems = [ temporis-desktop ];
               meta = meta;
+              FONTCONFIG_FILE = pkgs.makeFontsConf {
+                fontDirectories = [ pkgs.freefont_ttf ];
+              };
             };
             default = self'.packages.temporis;
           };
