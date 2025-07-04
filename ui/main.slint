@@ -46,7 +46,6 @@ export component AppWindow inherits Window {
 
     key-handler := FocusScope {
         key-pressed(event) => {
-            debug(event.text);
             if (event.text == "s") {
                 System.toggleStart();
             }
@@ -61,6 +60,9 @@ export component AppWindow inherits Window {
             }
             if (event.text == "b") {
                 navigate(0);
+            }
+            if (event.modifiers.control && event.text == "q") {
+                ExternalSystem.exit()
             }
             accept
         }

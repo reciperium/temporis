@@ -130,6 +130,13 @@ fn main() -> Result<(), slint::PlatformError> {
         });
 
     let progress_integration = shared_progress_integration.clone();
+    main_window.global::<ExternalSystem>().on_exit(move || {
+        _ = progress_integration.borrow_mut().stop();
+        _ = progress_integration.borrow().emit();
+        std::process::exit(0)
+    });
+
+    let progress_integration = shared_progress_integration.clone();
     main_window.window().on_close_requested(move || {
         _ = progress_integration.borrow_mut().stop();
         _ = progress_integration.borrow().emit();
