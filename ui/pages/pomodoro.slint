@@ -12,9 +12,10 @@ import {
 import {ExternalSystem, Interval, System} from "../globals.slint";
 
 export component Pomodoro {
-    callback navigate(page: int);
     width: 100%;
+    height: 100%;
 
+    callback navigate(page: int);
     pure function intervalToString(interval: Interval) -> string {
         if (interval == Interval.Focus) {
             return "Focus";

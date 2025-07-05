@@ -9,6 +9,7 @@ import {
     HorizontalBox,
     LineEdit,
     Switch,
+    ScrollView,
 } from "std-widgets.slint";
 import {ExternalSystem, Interval, System} from "../globals.slint";
 
@@ -25,138 +26,142 @@ export component Settings {
     }
 
     height: 100%;
-    VerticalLayout {
-        alignment: space-around;
-        // width: 80%;
+    width: 100%;
+    ScrollView {
+        width: 100%;
+        padding: 10px;
 
-        // padding: 10px;
+        VerticalBox {
+            alignment: space-around;
 
-        HorizontalLayout {
-            alignment: start;
-            Button {
-                icon: @image-url("../../assets/icons/left.svg");
-                clicked() => {
-                    navigate(0);
+            HorizontalLayout {
+                alignment: start;
+                Button {
+                    icon: @image-url("../../assets/icons/left.svg");
+                    colorize-icon: true;
+                    clicked() => {
+                        navigate(0);
+                    }
                 }
             }
-        }
 
-        GridLayout {
-            spacing-horizontal: 10px;
-            spacing-vertical: 20px;
+            GridLayout {
+                spacing-horizontal: 10px;
+                spacing-vertical: 20px;
 
-            Row {
+                Row {
+                    Text {
+
+                        text: "Interval duration";
+                        vertical-alignment: center;
+                    }
+
+                    LineEdit {
+                        width: 40pt;
+                        placeholder-text: "Interval duration";
+                        input-type: number;
+                        text: ExternalSystem.focus_duration / 60;
+                        edited(text) => {
+                            ExternalSystem.focus_duration = text.to-float() * 60;
+                            ExternalSystem.save_focus(ExternalSystem.focus_duration);
+                        }
+                    }
+                }
+
+                Row {
+                    Text {
+                        text: "Short break duration";
+                        vertical-alignment: center;
+                    }
+
+                    LineEdit {
+                        width: 40pt;
+                        placeholder-text: "Short break duration";
+                        input-type: number;
+                        text: ExternalSystem.short_break_duration / 60;
+                        edited(text) => {
+                            ExternalSystem.short_break_duration = text.to-float() * 60;
+                            ExternalSystem.save_focus(ExternalSystem.short_break_duration);
+                        }
+                    }
+                }
+
+                Row {
+                    Text {
+                        text: "Long break duration";
+                        vertical-alignment: center;
+                    }
+
+                    LineEdit {
+                        width: 40pt;
+                        placeholder-text: "Long break duration";
+                        input-type: number;
+                        text: ExternalSystem.long_break_duration / 60;
+                        edited(text) => {
+                            ExternalSystem.long_break_duration = text.to-float() * 60;
+                            ExternalSystem.save_focus(ExternalSystem.long_break_duration);
+                        }
+                    }
+                }
+
+                Row {
+                    Text {
+                        text: "Sessions before long break";
+                        vertical-alignment: center;
+                    }
+
+                    LineEdit {
+                        width: 40pt;
+                        placeholder-text: "Sessions before long break";
+                        input-type: number;
+                        text: ExternalSystem.sessions;
+                        edited(text) => {
+                            ExternalSystem.sessions = text.to-float() * 60;
+                            ExternalSystem.save_focus(ExternalSystem.sessions);
+                        }
+                    }
+                }
+
+                Row {
+                    Switch {
+                        text: "Notifications";
+                        checked: ExternalSystem.enable_notifications;
+                        toggled() => {
+                            ExternalSystem.enable_notifications = self.checked;
+                            ExternalSystem.save_enable_notifications(ExternalSystem.enable_notifications);
+                        }
+                    }
+                }
+
+                Row {
+                    Switch {
+                        text: "Always show notifications";
+                        checked: ExternalSystem.enable_notifications && ExternalSystem.critical_notifications;
+                        toggled() => {
+                            ExternalSystem.critical_notifications = self.checked;
+                            ExternalSystem.save_critical_notifications(ExternalSystem.critical_notifications);
+                        }
+                    }
+                }
+
+                Row {
+                    Switch {
+                        text: "Tick sound";
+                        checked: ExternalSystem.tick_sound;
+                        toggled() => {
+                            ExternalSystem.tick_sound = self.checked;
+                            ExternalSystem.save_tick_sound(ExternalSystem.tick_sound);
+                        }
+                    }
+                }
+            }
+
+            HorizontalBox {
+                alignment: center;
                 Text {
-
-                    text: "Interval duration";
+                    text: "reciperium.com";
                     vertical-alignment: center;
                 }
-
-                LineEdit {
-                    width: 40pt;
-                    placeholder-text: "Interval duration";
-                    input-type: number;
-                    text: ExternalSystem.focus_duration / 60;
-                    edited(text) => {
-                        ExternalSystem.focus_duration = text.to-float() * 60;
-                        ExternalSystem.save_focus(ExternalSystem.focus_duration);
-                    }
-                }
-            }
-
-            Row {
-                Text {
-                    text: "Short break duration";
-                    vertical-alignment: center;
-                }
-
-                LineEdit {
-                    width: 40pt;
-                    placeholder-text: "Short break duration";
-                    input-type: number;
-                    text: ExternalSystem.short_break_duration / 60;
-                    edited(text) => {
-                        ExternalSystem.short_break_duration = text.to-float() * 60;
-                        ExternalSystem.save_focus(ExternalSystem.short_break_duration);
-                    }
-                }
-            }
-
-            Row {
-                Text {
-                    text: "Long break duration";
-                    vertical-alignment: center;
-                }
-
-                LineEdit {
-                    width: 40pt;
-                    placeholder-text: "Long break duration";
-                    input-type: number;
-                    text: ExternalSystem.long_break_duration / 60;
-                    edited(text) => {
-                        ExternalSystem.long_break_duration = text.to-float() * 60;
-                        ExternalSystem.save_focus(ExternalSystem.long_break_duration);
-                    }
-                }
-            }
-
-            Row {
-                Text {
-                    text: "Sessions before long break";
-                    vertical-alignment: center;
-                }
-
-                LineEdit {
-                    width: 40pt;
-                    placeholder-text: "Sessions before long break";
-                    input-type: number;
-                    text: ExternalSystem.sessions;
-                    edited(text) => {
-                        ExternalSystem.sessions = text.to-float() * 60;
-                        ExternalSystem.save_focus(ExternalSystem.sessions);
-                    }
-                }
-            }
-
-            Row {
-                Switch {
-                    text: "Notifications";
-                    checked: ExternalSystem.enable_notifications;
-                    toggled() => {
-                        ExternalSystem.enable_notifications = self.checked;
-                        ExternalSystem.save_enable_notifications(ExternalSystem.enable_notifications);
-                    }
-                }
-            }
-
-            Row {
-                Switch {
-                    text: "Always show notifications";
-                    checked: ExternalSystem.critical_notifications;
-                    toggled() => {
-                        ExternalSystem.critical_notifications = self.checked;
-                        ExternalSystem.save_critical_notifications(ExternalSystem.critical_notifications);
-                    }
-                }
-            }
-
-            Row {
-                Switch {
-                    text: "Tick sound";
-                    checked: ExternalSystem.tick_sound;
-                    toggled() => {
-                        ExternalSystem.tick_sound = self.checked;
-                        ExternalSystem.save_tick_sound(ExternalSystem.tick_sound);
-                    }
-                }
-            }
-        }
-
-        HorizontalBox {
-            alignment: center;
-            Text {
-                text: "reciperium.com";
-                vertical-alignment: center;
             }
         }
     }

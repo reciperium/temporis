@@ -39,10 +39,10 @@ fn main() -> Result<(), slint::PlatformError> {
         .set_short_break_duration(config.short_break_duration);
     main_window
         .global::<ExternalSystem>()
-        .set_critical_notifications(config.critical_notifications);
+        .set_enable_notifications(config.enable_notifications);
     main_window
         .global::<ExternalSystem>()
-        .set_enable_notifications(config.enable_notifications);
+        .set_critical_notifications(config.critical_notifications);
 
     main_window
         .global::<ExternalSystem>()
