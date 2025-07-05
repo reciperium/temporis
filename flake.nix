@@ -44,8 +44,16 @@
           # rust
           rustChannel = "stable";
           fenix = inputs'.fenix.packages;
-          toolchain = fenix.${rustChannel}.toolchain;
-          craneLib = (crane.mkLib pkgs).overrideToolchain toolchain;
+          rustToolchain = (
+            fenix.combine [
+              fenix.${rustChannel}.toolchain
+              # https://doc.rust-lang.org/rustc/platform-support.html
+              # For more targets add:
+              # fenix.targets.aarch64-linux-android."${rustChannel}".rust-std
+              # fenix.targets.x86_64-linux-android."${rustChannel}".rust-std
+            ]
+          );
+          craneLib = (crane.mkLib pkgs).overrideToolchain rustToolchain;
           ldLibraryPath =
             with pkgs;
             lib.makeLibraryPath [
@@ -122,14 +130,7 @@
               # Available packages on https://search.nixos.org/packages
               buildInputs = with pkgs; [
                 just
-
-                (fenix.combine [
-                  toolchain
-                  # https://doc.rust-lang.org/rustc/platform-support.html
-                  # For more targets add:
-                  # fenix.targets.aarch64-linux-android."${rustChannel}".rust-std
-                  # fenix.targets.x86_64-linux-android."${rustChannel}".rust-std
-                ])
+                rustToolchain
                 pkgconf
                 alsa-lib
                 slint-viewer
