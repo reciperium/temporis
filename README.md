@@ -1,6 +1,6 @@
-<img src="./ui/icons/logo.svg" alt="logo" width="200" height="200">
+<img src="./assets/icons/logo.svg" alt="logo" width="200" height="200">
 
-_[temporis-logo](https://github.com/reciperium/temporis/blob/main/ui/icons/logo.svg) © 2025 by [Lara Sitruk](https://www.instagram.com/lazomicreative/) is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)_
+_[temporis-logo](./assets/icons/logo.svg) © 2025 by [Lara Sitruk](https://www.instagram.com/lazomicreative/) is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)_
 
 # Temporis
 
