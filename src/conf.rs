@@ -13,7 +13,7 @@ pub struct Config {
     pub short_break_duration: i32,
     pub long_break_duration: i32,
     pub sessions: i32,
-    pub bypass_dnd: bool,
+    pub critical_notifications: bool,
     pub tick_sound: bool,
 }
 
@@ -25,7 +25,7 @@ impl Config {
             .set_default("short_break_duration", SHORT_BREAK_DURATION)?
             .set_default("long_break_duration", LONG_BREAK_DURATION)?
             .set_default("sessions", SESSIONS)?
-            .set_default("bypass_dnd", true)?
+            .set_default("critical_notifications", true)?
             .set_default("tick_sound", true)?
             .add_source(
                 config::File::with_name(config_dir.join("config.toml").to_str().unwrap())

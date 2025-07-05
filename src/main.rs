@@ -39,6 +39,9 @@ fn main() -> Result<(), slint::PlatformError> {
         .set_short_break_duration(config.short_break_duration);
     main_window
         .global::<ExternalSystem>()
+        .set_critical_notifications(config.critical_notifications);
+    main_window
+        .global::<ExternalSystem>()
         .set_sessions(config.sessions);
 
     main_window
@@ -98,9 +101,9 @@ fn main() -> Result<(), slint::PlatformError> {
     let cfg_clone = shared_cfg.clone();
     main_window
         .global::<ExternalSystem>()
-        .on_save_bypass_dnd(move |value| {
+        .on_save_critical_notifications(move |value| {
             let mut cfg_mut = cfg_clone.borrow_mut();
-            cfg_mut.bypass_dnd = value;
+            cfg_mut.critical_notifications = value;
             let r = cfg_mut.save();
             if let Err(e) = r {
                 eprintln!("Error saving bypass dnd: {}", e);

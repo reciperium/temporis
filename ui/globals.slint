@@ -14,7 +14,7 @@ export global ExternalSystem {
     in-out property <int> short_break_duration: 300; // 5 minutes
     in-out property <int> long_break_duration: 1200; // 20 minutes
     in-out property <int> sessions: 4;
-    in-out property <bool> bypass_dnd: true;
+    in-out property <bool> critical_notifications: true;
     in-out property <bool> tick_sound: true;
 
     callback notify(message: Message);
@@ -22,7 +22,7 @@ export global ExternalSystem {
     callback save_short_break(value: int);
     callback save_long_break(value: int);
     callback save_sessions(value: int);
-    callback save_bypass_dnd(value: bool);
+    callback save_critical_notifications(value: bool);
     callback save_tick_sound(value: bool);
     callback update_progress(progress: float);
     callback stop_progress();
@@ -42,44 +42,44 @@ export global System {
         {
             summary: "Interval Ended",
             body: "Time for a breather! Hydrate with some water and stretch a bit",
-            critical: ExternalSystem.bypass_dnd,
+            critical: ExternalSystem.critical_notifications,
         },
         {
             summary: "Interval Ended",
             body: "Great work! Stand up, walk around, or do a few quick exercises to recharge",
-            critical: ExternalSystem.bypass_dnd,
+            critical: ExternalSystem.critical_notifications,
         },
         {
             summary: "Interval Ended",
             body: "Step away from the screen; perhaps grab a drink or stretch",
-            critical: ExternalSystem.bypass_dnd,
+            critical: ExternalSystem.critical_notifications,
         },
         {
             summary: "Interval Ended",
             body: "Break time! How about a short walk or some light stretching to clear your head?",
-            critical: ExternalSystem.bypass_dnd,
+            critical: ExternalSystem.critical_notifications,
         },
     ];
     out property <[Message]> short_break_messages: [
         {
             summary: "Break Ended",
             body: "Time to focus again! Keep up the good work!",
-            critical: ExternalSystem.bypass_dnd
+            critical: ExternalSystem.critical_notifications
         },
         {
             summary: "Break Ended",
             body: "Great job! Let's get back to work!",
-            critical: ExternalSystem.bypass_dnd
+            critical: ExternalSystem.critical_notifications
         },
         {
             summary: "Break Ended",
             body: "Ready to dive back in? Let's go!",
-            critical: ExternalSystem.bypass_dnd
+            critical: ExternalSystem.critical_notifications
         },
         {
             summary: "Break Ended",
             body: "Focus time again. You got this!",
-            critical: ExternalSystem.bypass_dnd
+            critical: ExternalSystem.critical_notifications
         },
     ];
     out property <[Message]> long_break_messages: [
@@ -119,7 +119,7 @@ export global System {
         return {
             summary: "Error",
             body: "Unexpected interval detected",
-            critical: ExternalSystem.bypass_dnd
+            critical: ExternalSystem.critical_notifications
         };
     }
 
