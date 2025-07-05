@@ -102,8 +102,8 @@
 
                   # install icon
                   mkdir -p "$out/share/icons/hicolor/scalable/apps"
-                  install -Dm644 ui/icons/logo.svg $out/share/icons/hicolor/scalable/apps/com.reciperium.temporis.svg
-                  # ln -s "ui/icons/logo.png" "$out/share/icons/hicolor/128x128/apps/com.reciperium.temporis.png"
+                  install -Dm644 assets/icons/logo.svg $out/share/icons/hicolor/scalable/apps/com.reciperium.temporis.svg
+                  # ln -s "assets/icons/logo.png" "$out/share/icons/hicolor/128x128/apps/com.reciperium.temporis.png"
 
                   # install desktop file
                   mkdir -p $out/share/applications
