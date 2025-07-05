@@ -120,6 +120,17 @@ export component Settings {
 
             Row {
                 Switch {
+                    text: "Notifications";
+                    checked: ExternalSystem.enable_notifications;
+                    toggled() => {
+                        ExternalSystem.enable_notifications = self.checked;
+                        ExternalSystem.save_enable_notifications(ExternalSystem.enable_notifications);
+                    }
+                }
+            }
+
+            Row {
+                Switch {
                     text: "Always show notifications";
                     checked: ExternalSystem.critical_notifications;
                     toggled() => {

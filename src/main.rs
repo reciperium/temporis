@@ -42,6 +42,10 @@ fn main() -> Result<(), slint::PlatformError> {
         .set_critical_notifications(config.critical_notifications);
     main_window
         .global::<ExternalSystem>()
+        .set_enable_notifications(config.enable_notifications);
+
+    main_window
+        .global::<ExternalSystem>()
         .set_sessions(config.sessions);
 
     main_window
@@ -95,6 +99,18 @@ fn main() -> Result<(), slint::PlatformError> {
             let r = cfg_mut.save();
             if let Err(e) = r {
                 eprintln!("Error saving sessions amount: {}", e);
+            }
+        });
+
+    let cfg_clone = shared_cfg.clone();
+    main_window
+        .global::<ExternalSystem>()
+        .on_save_enable_notifications(move |value| {
+            let mut cfg_mut = cfg_clone.borrow_mut();
+            cfg_mut.enable_notifications = value;
+            let r = cfg_mut.save();
+            if let Err(e) = r {
+                eprintln!("Error saving bypass dnd: {}", e);
             }
         });
 

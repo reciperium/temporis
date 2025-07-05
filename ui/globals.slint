@@ -14,6 +14,7 @@ export global ExternalSystem {
     in-out property <int> short_break_duration: 300; // 5 minutes
     in-out property <int> long_break_duration: 1200; // 20 minutes
     in-out property <int> sessions: 4;
+    in-out property <bool> enable_notifications: true;
     in-out property <bool> critical_notifications: true;
     in-out property <bool> tick_sound: true;
 
@@ -22,6 +23,7 @@ export global ExternalSystem {
     callback save_short_break(value: int);
     callback save_long_break(value: int);
     callback save_sessions(value: int);
+    callback save_enable_notifications(value: bool);
     callback save_critical_notifications(value: bool);
     callback save_tick_sound(value: bool);
     callback update_progress(progress: float);
@@ -127,7 +129,9 @@ export global System {
         if System.status == Interval.Focus {
             System.sessionCount = System.sessionCount + 1;
         }
-        ExternalSystem.notify(nextMessage(System.status));
+        if ExternalSystem.enable_notifications {
+            ExternalSystem.notify(nextMessage(System.status));
+        }
         System.status = System.nextInterval(System.status, System.sessionCount);
         System.value = System.getDuration(System.status);
         ExternalSystem.stop_progress();

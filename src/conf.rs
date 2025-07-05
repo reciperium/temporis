@@ -13,6 +13,7 @@ pub struct Config {
     pub short_break_duration: i32,
     pub long_break_duration: i32,
     pub sessions: i32,
+    pub enable_notifications: bool,
     pub critical_notifications: bool,
     pub tick_sound: bool,
 }
@@ -25,6 +26,7 @@ impl Config {
             .set_default("short_break_duration", SHORT_BREAK_DURATION)?
             .set_default("long_break_duration", LONG_BREAK_DURATION)?
             .set_default("sessions", SESSIONS)?
+            .set_default("enable_notifications", true)?
             .set_default("critical_notifications", true)?
             .set_default("tick_sound", true)?
             .add_source(
