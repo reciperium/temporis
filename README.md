@@ -23,7 +23,7 @@ Furthermore, clear breaks give you space to stretch, move and hydrate.
 The app tries to consolidate nice features from different pomodoro apps, into a single one, with the style of
 the host operating system.
 
-Reciperium builds applications for the mind and soul.
+A [Reciperium](https://reciperium.com) application, [Reciperium](https://reciperium.com) builds applications for the mind and soul.
 
 ## Platforms
 
@@ -55,11 +55,11 @@ Reciperium builds applications for the mind and soul.
 
 ---
 
-## Thanks
+## Acknowledgments
 
-- [Vadoola](https://github.com/Vadoola) for the display time equation using slint lang, as I was completely lost. [time-remaining()](https://github.com/Vadoola/Tomotroid/blob/main/ui/appwindow.slint#L88)
+- [Vadoola](https://github.com/Vadoola) for the display time equation using slint lang, as I was completely lost. [time-remaining()](https://github.com/Vadoola/Tomotroid/blob/main/ui/appwindow.slint#L88) and a lot of new nice libraries (e.g: rodio)
 - [Francis](https://github.com/KDE/francis) is a pomodoro app for KDE, built using the KDE Kirigami framework, I drew a lot of inspiration from it.
-
+- [metal_click_6.flac by qubodup](https://freesound.org/s/67610/) -- [License: Creative Commons 0](http://creativecommons.org/publicdomain/zero/1.0/)
 
 ## Resources
 
@@ -69,4 +69,6 @@ Reciperium builds applications for the mind and soul.
 - [Urgency levels](https://specifications.freedesktop.org/notification-spec/latest/urgency-levels.html)
 - [makeDesktopItem](https://nixos.org/manual/nixpkgs/stable/#trivial-builder-makeDesktopItem) for NixOS
 
-<img src="./docs/images/made-with-slint.png" alt="made with slint logo" width="200">
+<p align="center">
+    <img src="./docs/images/made-with-slint.png" alt="made with slint logo" width="200">
+</p>

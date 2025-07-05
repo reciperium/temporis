@@ -11,6 +11,7 @@ notify-rust = "4.11.7"
 serde = { version = "1.0.219", features = ["derive"] }
 slint = "1.11.0"
 thiserror = "2.0.12"
+rodio = "0.20.1"
 
 [target.'cfg(target_os = "linux")'.dependencies]
 zbus = "5.7.1"

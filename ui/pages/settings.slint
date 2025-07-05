@@ -119,13 +119,23 @@ export component Settings {
             }
 
             Row {
-
                 Switch {
                     text: "Skip DnD (linux only)";
                     checked: ExternalSystem.bypass_dnd;
                     toggled() => {
                         ExternalSystem.bypass_dnd = self.checked;
                         ExternalSystem.save_bypass_dnd(ExternalSystem.bypass_dnd);
+                    }
+                }
+            }
+
+            Row {
+                Switch {
+                    text: "Tick sound";
+                    checked: ExternalSystem.tick_sound;
+                    toggled() => {
+                        ExternalSystem.tick_sound = self.checked;
+                        ExternalSystem.save_tick_sound(ExternalSystem.tick_sound);
                     }
                 }
             }

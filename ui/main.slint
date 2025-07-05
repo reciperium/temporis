@@ -14,7 +14,7 @@ import { Pomodoro } from "./pages/pomodoro.slint";
 import { Settings } from "./pages/settings.slint";
 
 export {
-    ExternalSystem,
+    ExternalSystem, Interval
 }
 
 export component AppWindow inherits Window {
@@ -34,6 +34,7 @@ export component AppWindow inherits Window {
         running: System.running;
         triggered() => {
             System.value -= 1;
+            ExternalSystem.tick(System.status);
             // Update progress every 10 seconds
             if (mod(System.value, 10) == 0) {
                 ExternalSystem.update_progress(1 - System.value / System.getDuration(System.status));

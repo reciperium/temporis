@@ -1,5 +1,5 @@
 {
-  description = "A development shell for rust";
+  description = "Temporis rust flake with slint support";
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     fenix = {
@@ -84,10 +84,13 @@
             temporis = craneLib.buildPackage {
               src = gitignoreSource ./.;
               strictDeps = true;
+              nativeBuildInputs = with pkgs; [ pkgconf ];
+
               buildInputs =
                 with pkgs;
                 [ ]
                 ++ lib.optionals stdenv.isLinux [
+                  alsa-lib
                   makeWrapper
                 ];
 
@@ -127,7 +130,8 @@
                   # fenix.targets.aarch64-linux-android."${rustChannel}".rust-std
                   # fenix.targets.x86_64-linux-android."${rustChannel}".rust-std
                 ])
-
+                pkgconf
+                alsa-lib
                 slint-viewer
                 slint-lsp
                 bacon

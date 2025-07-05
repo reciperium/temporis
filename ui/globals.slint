@@ -15,6 +15,7 @@ export global ExternalSystem {
     in-out property <int> long_break_duration: 1200; // 20 minutes
     in-out property <int> sessions: 4;
     in-out property <bool> bypass_dnd: true;
+    in-out property <bool> tick_sound: true;
 
     callback notify(message: Message);
     callback save_focus(value: int);
@@ -22,9 +23,11 @@ export global ExternalSystem {
     callback save_long_break(value: int);
     callback save_sessions(value: int);
     callback save_bypass_dnd(value: bool);
+    callback save_tick_sound(value: bool);
     callback update_progress(progress: float);
     callback stop_progress();
     callback exit();
+    callback tick(current_interval: Interval);
 }
 
 export global System {

@@ -1,5 +1,6 @@
-use std::{cell::RefCell, rc::Rc};
+use std::{cell::RefCell, io::Cursor, rc::Rc};
 
+use rodio::{Decoder, OutputStream, Sink};
 use slint::{CloseRequestResponse, set_xdg_app_id};
 use temporis::{
     conf::Config,
@@ -11,12 +12,19 @@ use temporis::{
 };
 
 slint::slint! {
-    export { ExternalSystem, AppWindow } from "ui/main.slint";
+    export { ExternalSystem, AppWindow, Interval } from "ui/main.slint";
 }
+
+pub const TICK: &[u8] = include_bytes!("../assets/audio/tick.flac");
 
 fn main() -> Result<(), slint::PlatformError> {
     let config = Config::new().expect("config should be loaded correctly");
     let main_window = AppWindow::new()?;
+
+    // Initialize audio sink
+    let (_audio_stream, audio_handle) = OutputStream::try_default().unwrap();
+    let audio_sink = Rc::new(Sink::try_new(&audio_handle).unwrap());
+    audio_sink.set_volume(0.5);
 
     _ = set_xdg_app_id("com.reciperium.temporis");
 
@@ -33,13 +41,17 @@ fn main() -> Result<(), slint::PlatformError> {
         .global::<ExternalSystem>()
         .set_sessions(config.sessions);
 
+    main_window
+        .global::<ExternalSystem>()
+        .set_tick_sound(config.tick_sound);
+
     let shared_cfg = Rc::new(RefCell::new(config));
 
-    let cfg_clone1 = shared_cfg.clone();
+    let cfg_clone = shared_cfg.clone();
     main_window
         .global::<ExternalSystem>()
         .on_save_focus(move |value: i32| {
-            let mut cfg_mut = cfg_clone1.borrow_mut();
+            let mut cfg_mut = cfg_clone.borrow_mut();
             cfg_mut.focus_duration = value;
             let r = cfg_mut.save();
             if let Err(e) = r {
@@ -47,11 +59,11 @@ fn main() -> Result<(), slint::PlatformError> {
             }
         });
 
-    let cfg_clone2 = shared_cfg.clone();
+    let cfg_clone = shared_cfg.clone();
     main_window
         .global::<ExternalSystem>()
         .on_save_short_break(move |value| {
-            let mut cfg_mut = cfg_clone2.borrow_mut();
+            let mut cfg_mut = cfg_clone.borrow_mut();
             cfg_mut.short_break_duration = value;
             let r = cfg_mut.save();
             if let Err(e) = r {
@@ -59,11 +71,11 @@ fn main() -> Result<(), slint::PlatformError> {
             }
         });
 
-    let cfg_clone3 = shared_cfg.clone();
+    let cfg_clone = shared_cfg.clone();
     main_window
         .global::<ExternalSystem>()
         .on_save_long_break(move |value| {
-            let mut cfg_mut = cfg_clone3.borrow_mut();
+            let mut cfg_mut = cfg_clone.borrow_mut();
             cfg_mut.long_break_duration = value;
             let r = cfg_mut.save();
             if let Err(e) = r {
@@ -71,11 +83,11 @@ fn main() -> Result<(), slint::PlatformError> {
             }
         });
 
-    let cfg_clone4 = shared_cfg.clone();
+    let cfg_clone = shared_cfg.clone();
     main_window
         .global::<ExternalSystem>()
         .on_save_sessions(move |value| {
-            let mut cfg_mut = cfg_clone4.borrow_mut();
+            let mut cfg_mut = cfg_clone.borrow_mut();
             cfg_mut.sessions = value;
             let r = cfg_mut.save();
             if let Err(e) = r {
@@ -83,12 +95,23 @@ fn main() -> Result<(), slint::PlatformError> {
             }
         });
 
-    let cfg_clone5 = shared_cfg.clone();
+    let cfg_clone = shared_cfg.clone();
     main_window
         .global::<ExternalSystem>()
         .on_save_bypass_dnd(move |value| {
-            let mut cfg_mut = cfg_clone5.borrow_mut();
+            let mut cfg_mut = cfg_clone.borrow_mut();
             cfg_mut.bypass_dnd = value;
+            let r = cfg_mut.save();
+            if let Err(e) = r {
+                eprintln!("Error saving bypass dnd: {}", e);
+            }
+        });
+    let cfg_clone = shared_cfg.clone();
+    main_window
+        .global::<ExternalSystem>()
+        .on_save_tick_sound(move |value| {
+            let mut cfg_mut = cfg_clone.borrow_mut();
+            cfg_mut.tick_sound = value;
             let r = cfg_mut.save();
             if let Err(e) = r {
                 eprintln!("Error saving bypass dnd: {}", e);
@@ -111,6 +134,20 @@ fn main() -> Result<(), slint::PlatformError> {
             eprintln!("Error sending notification: {}", e);
         }
     });
+
+    let cfg_clone = shared_cfg.clone();
+    main_window.global::<ExternalSystem>().on_tick(
+        move |current_interval| match current_interval {
+            Interval::Focus => {
+                if cfg_clone.borrow().tick_sound {
+                    let source = Decoder::new(Cursor::new(TICK)).unwrap();
+                    audio_sink.append(source);
+                }
+            }
+            _ => {}
+        },
+    );
+
     let shared_progress_integration = Rc::new(RefCell::new(get_progress_integration()));
     let progress_integration = shared_progress_integration.clone();
     main_window
