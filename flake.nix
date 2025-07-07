@@ -12,13 +12,13 @@
 
     gitignore.url = "github:hercules-ci/gitignore.nix";
     gitignore.inputs.nixpkgs.follows = "nixpkgs";
-
   };
   outputs =
     inputs@{
       flake-parts,
       crane,
       gitignore,
+      self,
       ...
     }:
     let
@@ -41,6 +41,7 @@
         }:
         let
           gitignoreSource = gitignore.lib.gitignoreSource;
+
           # rust
           rustChannel = "stable";
           fenix = inputs'.fenix.packages;
@@ -62,6 +63,7 @@
               fontconfig
               libGL
             ];
+
           # app
           meta = {
             description = "A Pomodoro application helping you stay focused, fresh and healthy";
@@ -89,7 +91,8 @@
         in
         {
           packages = {
-            temporis = craneLib.buildPackage {
+            temporis-bin = craneLib.buildPackage {
+              # name = "temporis";
               src = gitignoreSource ./.;
               strictDeps = true;
               nativeBuildInputs = with pkgs; [ pkgconf ];
@@ -101,26 +104,38 @@
                   alsa-lib
                   makeWrapper
                 ];
-
-              # I should probably use patchelf but I don't know how
+              meta = meta;
+            };
+            # installable for NixOS
+            temporis-desktop = pkgs.stdenv.mkDerivation {
+              name = "temporis-desktop";
+              nativeBuildInputs = with pkgs; [ ] ++ lib.optionals stdenv.isLinux [ copyDesktopItems ];
+              buildInputs =
+                with pkgs;
+                [ ]
+                ++ lib.optionals stdenv.isLinux [
+                  makeWrapper
+                ];
+              src = self;
+              buildPhase = ''
+                mkdir -p "$out/bin"
+                install -Dm755 ${self'.packages.temporis-bin}/bin/temporis $out/bin/temporis
+              '';
+              desktopItems = [ temporis-desktop ];
+              installPhase = ''
+                # install icon
+                mkdir -p "$out/share/icons/hicolor/scalable/apps"
+                install -Dm644 assets/icons/logo.svg $out/share/icons/hicolor/scalable/apps/com.reciperium.temporis.svg
+                runHook postInstall
+              '';
               postInstall =
                 with pkgs;
                 lib.optionalString stdenv.isLinux ''
                   wrapProgram $out/bin/temporis --set LD_LIBRARY_PATH "${ldLibraryPath}"
-
-                  # install icon
-                  mkdir -p "$out/share/icons/hicolor/scalable/apps"
-                  install -Dm644 assets/icons/logo.svg $out/share/icons/hicolor/scalable/apps/com.reciperium.temporis.svg
-                  # ln -s "assets/icons/logo.png" "$out/share/icons/hicolor/128x128/apps/com.reciperium.temporis.png"
-
-                  # install desktop file
-                  mkdir -p $out/share/applications
-                  install -Dm644 ${temporis-desktop}/share/applications/*.desktop $out/share/applications/com.reciperium.temporis.desktop
                 '';
-              desktopItems = [ temporis-desktop ];
               meta = meta;
             };
-            default = self'.packages.temporis;
+            default = self'.packages.temporis-desktop;
           };
 
           devShells = {

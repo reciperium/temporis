@@ -9,7 +9,7 @@ build__bin:
 # Install the application for debug
 fresh-install:
     nix profile remove temporis || true
-    nix profile install --show-trace .#temporis
+    nix profile install --show-trace .#temporis-desktop
 
 bundle__appimage:
     nix bundle --bundler github:ralismark/nix-appimage .#temporis

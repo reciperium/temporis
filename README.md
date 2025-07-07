@@ -11,7 +11,7 @@ _[temporis-logo](./assets/icons/logo.svg) © 2025 by [Lara Sitruk](https://www.i
 ## Installation
 
 ```sh
-nix profile add github:reciperium/temporis
+nix profile install github:reciperium/temporis
 ```
 
 ## Why?
