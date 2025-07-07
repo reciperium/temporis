@@ -64,6 +64,15 @@
               libGL
             ];
 
+          # deb
+          vm = pkgs.vmTools.diskImageFuns.debian12x86_64 { };
+          args = {
+            diskImage = vm;
+            nativeBuildInputs = [ pkgs.coreutils ];
+            diskImageFormat = "qcow2";
+            name = "temporis-deb";
+            meta = meta;
+          };
           # app
           meta = {
             description = "A Pomodoro application helping you stay focused, fresh and healthy";
@@ -102,7 +111,6 @@
                 [ ]
                 ++ lib.optionals stdenv.isLinux [
                   alsa-lib
-                  makeWrapper
                 ];
               meta = meta;
             };
@@ -135,6 +143,24 @@
                 '';
               meta = meta;
             };
+            temporis-deb =
+              let
+                # deb
+                vm = pkgs.vmTools.diskImageFuns.debian12x86_64 { extraPackages = [ "coreutils" ]; };
+                args = {
+                  diskImage = vm;
+                  nativeBuildInputs = [ pkgs.coreutils ];
+                  diskImageFormat = "qcow2";
+                  name = "temporis-deb";
+                  src = self'.packages.temporis-bin.src;
+                  meta.description = meta.description;
+                  extraPackages = [ "coreutils" ];
+                  doCheck = false;
+                  doInstallCheck = false;
+                  showBuildStats = false;
+                };
+              in
+              pkgs.releaseTools.debBuild args;
             default = self'.packages.temporis-desktop;
           };
 
@@ -153,6 +179,7 @@
                 bacon
                 jq
                 cachix
+                fpm
               ];
 
               shellHook = ''
