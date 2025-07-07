@@ -38,11 +38,11 @@ A [Reciperium](https://reciperium.com) application, [Reciperium](https://reciper
 
 - Switch between focus work and diffusion modes
 - Shortcuts
-- App style based on OS
+- TOML Configuration
+- App style based on your OS
 - Notifications reminding you to stretch and hydrate
-- Configuration
 - Visible progress
-- WIP: Sound notification
+- Tick Sound notification
 - WIP: Automatically set "Do not disturb" mode during focus work sessions (KDE for now using dbus)
 
 ## Shortcuts
