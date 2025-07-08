@@ -1,0 +1,30 @@
+import { Palette } from "std-widgets.slint";
+
+export global LinkEvent {
+    // should be modified from code with `on_click`
+    pure callback click(string);
+}
+
+// Define a new component for the hyperlink
+// Based on the work of github.com/Vadoola
+export component Link inherits Text {
+    in property <string> url;
+    in property <color> link-color: Palette.selection-background.with-alpha(1);
+    in property <color> hover-color: Palette.selection-background.brighter(0.2);
+
+    hyperlink := TouchArea {
+        mouse-cursor: MouseCursor.pointer;
+        clicked => {
+            LinkEvent.click(root.url)
+        }
+    }
+
+    states [
+        has-hvr when hyperlink.has-hover: {
+            color: root.hover-color;
+        }
+        not-hvr when !hyperlink.has-hover: {
+            color: root.link-color;
+        }
+    ]
+}

@@ -12,7 +12,7 @@ use temporis::{
 };
 
 slint::slint! {
-    export { ExternalSystem, AppWindow, Interval } from "ui/main.slint";
+    export { ExternalSystem, AppWindow, Interval, LinkEvent } from "ui/main.slint";
 }
 
 pub const TICK: &[u8] = include_bytes!("../assets/audio/tick.flac");
@@ -197,6 +197,13 @@ fn main() -> Result<(), slint::PlatformError> {
         _ = progress_integration.borrow_mut().stop();
         _ = progress_integration.borrow().emit();
         CloseRequestResponse::HideWindow
+    });
+
+    main_window.global::<LinkEvent>().on_click(move |url| {
+        let out = webbrowser::open(&url);
+        if let Err(e) = out {
+            eprintln!("Failed to open URL: {}", e);
+        }
     });
 
     main_window.run()
