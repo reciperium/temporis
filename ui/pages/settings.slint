@@ -12,6 +12,8 @@ import {
     ScrollView,
 } from "std-widgets.slint";
 import {ExternalSystem, Interval, System} from "../globals.slint";
+import { Link } from "../components/link.slint";
+import { HorizontalDivider } from "../components/divider.slint";
 
 export component Settings {
     callback navigate(page: int);
@@ -28,9 +30,6 @@ export component Settings {
     height: 100%;
     width: 100%;
     ScrollView {
-        width: 100%;
-        padding: 10px;
-
         VerticalBox {
             alignment: space-around;
 
@@ -156,11 +155,21 @@ export component Settings {
                 }
             }
 
-            HorizontalBox {
+            HorizontalDivider { }
+
+            VerticalBox {
                 alignment: center;
-                Text {
+                spacing: 15pt;
+
+                Link {
                     text: "reciperium.com";
+                    url: "https://reciperium.com";
                     vertical-alignment: center;
+                }
+
+                Text {
+                    text: "temporis-logo © 2025 by Lara Sitruk is licensed under CC BY 4.0";
+                    wrap: TextWrap.word-wrap;
                 }
             }
         }
