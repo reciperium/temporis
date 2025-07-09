@@ -153,6 +153,7 @@
                 bacon
                 jq
                 cachix
+                gettext
               ];
 
               shellHook = ''

@@ -85,7 +85,7 @@ export component Pomodoro {
             alignment: center;
             spacing: 5pt;
             Button {
-                text: System.running ? "Pause" : System.started ? "Continue" : "Start";
+                text: System.running ? @tr("Pause") : System.started ? @tr("Continue") : @tr("Start");
                 icon: System.running ? @image-url("../../assets/icons/pause.svg") : @image-url("../../assets/icons/play.svg");
                 colorize-icon: true;
                 primary: true;
@@ -95,7 +95,7 @@ export component Pomodoro {
             }
 
             Button {
-                text: "Reset";
+                text: @tr("Reset");
                 icon: @image-url("../../assets/icons/reset.svg");
                 colorize-icon: true;
 
@@ -106,7 +106,7 @@ export component Pomodoro {
             }
 
             Button {
-                text: "Skip";
+                text: @tr("Skip");
                 icon: @image-url("../../assets/icons/skip.svg");
                 colorize-icon: true;
                 enabled: System.started;

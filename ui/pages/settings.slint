@@ -51,13 +51,13 @@ export component Settings {
                 Row {
                     Text {
 
-                        text: "Interval duration";
+                        text: @tr("Interval duration");
                         vertical-alignment: center;
                     }
 
                     LineEdit {
                         width: 40pt;
-                        placeholder-text: "Interval duration";
+                        placeholder-text: @tr("Interval duration");
                         input-type: number;
                         text: ExternalSystem.focus_duration / 60;
                         edited(text) => {
@@ -69,13 +69,13 @@ export component Settings {
 
                 Row {
                     Text {
-                        text: "Short break duration";
+                        text: @tr("Short break duration");
                         vertical-alignment: center;
                     }
 
                     LineEdit {
                         width: 40pt;
-                        placeholder-text: "Short break duration";
+                        placeholder-text: @tr("Short break duration");
                         input-type: number;
                         text: ExternalSystem.short_break_duration / 60;
                         edited(text) => {
@@ -87,13 +87,13 @@ export component Settings {
 
                 Row {
                     Text {
-                        text: "Long break duration";
+                        text: @tr("Long break duration");
                         vertical-alignment: center;
                     }
 
                     LineEdit {
                         width: 40pt;
-                        placeholder-text: "Long break duration";
+                        placeholder-text: @tr("Long break duration");
                         input-type: number;
                         text: ExternalSystem.long_break_duration / 60;
                         edited(text) => {
@@ -105,13 +105,13 @@ export component Settings {
 
                 Row {
                     Text {
-                        text: "Sessions before long break";
+                        text: @tr("Sessions before long break");
                         vertical-alignment: center;
                     }
 
                     LineEdit {
                         width: 40pt;
-                        placeholder-text: "Sessions before long break";
+                        placeholder-text: @tr("Sessions before long break");
                         input-type: number;
                         text: ExternalSystem.sessions;
                         edited(text) => {
@@ -123,7 +123,7 @@ export component Settings {
 
                 Row {
                     Switch {
-                        text: "Notifications";
+                        text: @tr("Notifications");
                         checked: ExternalSystem.enable_notifications;
                         toggled() => {
                             ExternalSystem.enable_notifications = self.checked;
@@ -134,7 +134,7 @@ export component Settings {
 
                 Row {
                     Switch {
-                        text: "Always show notifications";
+                        text: @tr("Always show notifications");
                         checked: ExternalSystem.enable_notifications && ExternalSystem.critical_notifications;
                         toggled() => {
                             ExternalSystem.critical_notifications = self.checked;
@@ -145,7 +145,7 @@ export component Settings {
 
                 Row {
                     Switch {
-                        text: "Tick sound";
+                        text: @tr("Tick sound");
                         checked: ExternalSystem.tick_sound;
                         toggled() => {
                             ExternalSystem.tick_sound = self.checked;
@@ -168,7 +168,7 @@ export component Settings {
                 }
 
                 Text {
-                    text: "temporis-logo © 2025 by Lara Sitruk is licensed under CC BY 4.0";
+                    text: @tr("temporis-logo © 2025 by Lara Sitruk is licensed under CC BY 4.0");
                     wrap: TextWrap.word-wrap;
                 }
             }
