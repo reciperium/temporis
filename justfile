@@ -4,15 +4,44 @@ view:
 
 # Build the binary
 build__bin:
-    nix build .#temporis
+    nix build .#temporis-bin
+
+# Build .desktop icon
+build__desktop-file:
+    nix build .#temporis-desktop-file -o nix-built-assets
 
 # Install the application for debug
 fresh-install:
-    nix profile remove temporis || true
+    nix profile remove temporis-desktop || true
     nix profile install --show-trace .#temporis-desktop
 
+# Update dependencies
+flake__update:
+    nix flake update
+
+# Extract translations
+translations__extract:
+    find ui/ -name \*.slint | xargs slint-tr-extractor -o po/en/temporis.po
+
+
+## The following commands are experimental and probably won't work
+
+# Attempt at creating an AppImage bundle
 bundle__appimage:
     nix bundle --bundler github:ralismark/nix-appimage .#temporis
 
-flake__update:
-    nix flake update
+# Attempt at patching ELF files from binary
+# bundle__exe:
+#     nix-build -E 'with import <nixpkgs> {};
+#         let
+#             bundleRepo = fetchFromGitHub {
+#             owner = "3noch";
+#             repo = "nix-bundle-exe";
+#             # Use a specific commit hash for reproducibility
+#             rev = "7f61fe91a73119e1e39d821f0d215d6186d01363";
+#             # The sha256 hash ensures the fetched code is what you expect.
+#             # See the explanation below on how to calculate this.
+#             sha256 = "sha256-NKdglYdwN4M7/UOZ8Ml3fuJT1MYXAb6aU4ccU920BjM=";
+#             };
+#         in
+#         callPackage bundleRepo {} /nix/store/049mnwsjv5ba5plbnzbxf2w1nl256yn2-temporis-0.1.0'
