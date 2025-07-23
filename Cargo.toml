@@ -2,6 +2,12 @@
 name = "temporis"
 version = "0.1.0"
 edition = "2024"
+license-file = "LICENSE"
+description = "A pomodoro timer focused on attention and well-being"
+readme = "README.md"
+repository = "https://github.com/reciperium/temporis"
+authors = ["Santiago Fraire Willemoes <santiwilly@gmail.com>"]
+
 
 [dependencies]
 config = { version = "0.15.11", features = ["toml"] }
