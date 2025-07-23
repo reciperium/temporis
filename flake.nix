@@ -73,8 +73,8 @@
             platforms = systems;
             mainProgram = "temporis";
           };
-          temporis-desktop = pkgs.makeDesktopItem {
-            name = "temporis";
+          temporis-desktop-file = pkgs.makeDesktopItem {
+            name = "com.reciperium.temporis";
             exec = "temporis"; # recommended way, so users can wrap around it?
             desktopName = "Temporis";
             genericName = "Pomodoro Application";
@@ -121,21 +121,26 @@
                 mkdir -p "$out/bin"
                 install -Dm755 ${self'.packages.temporis-bin}/bin/temporis $out/bin/temporis
               '';
-              desktopItems = [ temporis-desktop ];
-              installPhase = ''
-                # install icon
-                mkdir -p "$out/share/icons/hicolor/scalable/apps"
-                install -Dm644 assets/icons/logo.svg $out/share/icons/hicolor/scalable/apps/com.reciperium.temporis.svg
-                runHook postInstall
-              '';
-              postInstall =
+              desktopItems = [ temporis-desktop-file ];
+              installPhase =
                 with pkgs;
-                lib.optionalString stdenv.isLinux ''
+                ''
+                  # install icon
+                  mkdir -p "$out/share/icons/hicolor/scalable/apps"
+                  install -Dm644 assets/icons/logo.svg $out/share/icons/hicolor/scalable/apps/com.reciperium.temporis.svg
+
+                ''
+                + lib.optionalString stdenv.isLinux ''
                   wrapProgram $out/bin/temporis --set LD_LIBRARY_PATH "${ldLibraryPath}"
+                ''
+                + ''
+                  runHook postInstall
                 '';
               meta = meta;
             };
             default = self'.packages.temporis-desktop;
+
+            temporis-desktop-file = temporis-desktop-file;
           };
 
           devShells = {
