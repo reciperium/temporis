@@ -22,3 +22,38 @@ webbrowser = "1.0.5"
 
 [target.'cfg(target_os = "linux")'.dependencies]
 zbus = "5.7.1"
+
+[package.metadata.packager]
+before-packaging-command = "cargo build --release"
+product-name = "Temporis"
+identifier = "com.reciperium.temporis"
+category = "Utility"
+
+[package.metadata.packager.deb]
+files = { "nix-built-assets/share/applications/com.reciperium.temporis.desktop" = "usr/share/applications/com.reciperium.temporis.desktop", "assets/icons/logo.svg" = "usr/share/icons/hicolor/scalable/apps/com.reciperium.temporis.svg" }
+depends = ["libasound2-dev"]
+# files = {
+# #     'target/release/temporis' = "usr/bin/",
+# 'nix-built-assets/share/applications/temporis.desktop'="usr/share/applications/temporis.desktop",
+# 'assets/icons/logo.svg'="usr/share/icons/hicolor/scalable/apps/com.reciperium.temporis.svg",
+# }
+
+# "README.md"="usr/share/doc/temporis/README"
+# [package.metadata.deb]
+# depends = ["libasound2-dev"]
+# section = "utility"
+# priority = "optional"
+
+# assets = [
+#     # target/release path is special, and gets replaced by cargo-deb with the actual target dir path.
+#     [
+#         "target/release/temporis",
+#         "usr/bin/",
+#         "755",
+#     ],
+#     # both array and object syntaxes are equivalent:
+#     { source = "README.md", dest = "usr/share/doc/temporis/README", mode = "644" },
+#     { source = "nix-built-assets/share/applications/temporis.desktop", dest = "usr/share/applications/temporis.desktop", mode = "644" },
+#     { source = "assets/icons/logo.svg", dest = "usr/share/icons/hicolor/scalable/apps/com.reciperium.temporis.svg", mode = "644" },
+# ]
+# separate-debug-symbols = true

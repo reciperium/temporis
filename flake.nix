@@ -51,7 +51,7 @@
               # https://doc.rust-lang.org/rustc/platform-support.html
               # For more targets add:
               # fenix.targets.aarch64-linux-android."${rustChannel}".rust-std
-              # fenix.targets.x86_64-linux-android."${rustChannel}".rust-std
+              # fenix.targets.wasm32-wasip1."${rustChannel}".rust-std
             ]
           );
           craneLib = (crane.mkLib pkgs).overrideToolchain rustToolchain;

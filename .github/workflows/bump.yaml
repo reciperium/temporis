@@ -1,0 +1,18 @@
+name: Bump
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Create git tag
+        id: tag_version
+        uses: Digital-Udvikling/actions-calver@main
+        with:
+          github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          prefix-tag: "v"
