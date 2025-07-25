@@ -24,7 +24,9 @@ translations__extract:
     find ui/ -name \*.slint | xargs slint-tr-extractor -o po/en/temporis.po
 
 
-## The following commands are experimental and probably won't work
+## Just for record, this is not actually used by CI
+bundle_deb:
+    cargo packager --formats deb
 
 # Attempt at creating an AppImage bundle
 bundle__appimage:

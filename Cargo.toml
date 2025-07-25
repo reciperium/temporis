@@ -22,3 +22,24 @@ webbrowser = "1.0.5"
 
 [target.'cfg(target_os = "linux")'.dependencies]
 zbus = "5.7.1"
+
+[package.metadata.packager]
+before-packaging-command = "cargo build --release"
+binaries_dir = "target/release"
+product-name = "Temporis"
+identifier = "com.reciperium.temporis"
+category = "Utility"
+resources = ["assets/icons/**"]
+out-dir = "bundle/deb/"
+license_file = "LICENSE"
+
+[package.metadata.packager.linux]
+# not wanted, as we create our own compliant desktop entry
+generate-desktop-entry = false
+
+[package.metadata.packager.deb]
+files = { "nix-built-assets/share/applications/com.reciperium.temporis.desktop" = "usr/share/applications/com.reciperium.temporis.desktop", "assets/icons/logo.svg" = "usr/share/icons/hicolor/scalable/apps/com.reciperium.temporis.svg" }
+depends = ["libasound2-dev"]
+
+[package.metadata.packager.appimage]
+files = {}

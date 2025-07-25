@@ -7,3 +7,5 @@ target
 /target
 todo.md
 *.qcow2
+bundle
+nix-built-assets

@@ -1,4 +1,4 @@
-name: "Deploy cache"
+name: "Deploy binary cache"
 on:
   push:
     branches:

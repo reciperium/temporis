@@ -1,0 +1,74 @@
+# unfortunately I cannot use nix to do this
+name: Bundles
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ github.ref_name }}
+      upload-url: ${{ steps.create-gh-release.outputs.upload_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create a GitHub release
+        id: create-gh-release
+        uses: ncipollo/release-action@v1
+        with:
+          # tag: ${{ steps.tag_version.outputs.new_tag }}
+          draft: true
+  bundle-linux:
+    runs-on: ubuntu-22.04 # LTS
+    needs: create-release
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo
+            target/
+          key: ${{ runner.os }}-22-04-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Add ubuntu dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install libasound2-dev
+      - name: Install nix
+        uses: DeterminateSystems/nix-installer-action@main
+      - name: Cache build artifacts
+        uses: DeterminateSystems/flakehub-cache-action@main
+      - name: Build desktop icon
+        run: nix develop --command bash -c "just build__desktop-file"
+      - name: Install cargo-packager
+        run: cargo install cargo-packager
+      - name: Bundle packages
+        run: cargo packager --formats deb
+      - name: Upload artifact
+        run: |
+          gh release upload ${{ needs.create-release.outputs.tag }} bundle/deb/temporis_0.1.0_amd64.deb
+      - uses: actions/upload-artifact@v4
+        with:
+          name: temporis_amd64.deb
+          path: bundle/deb/temporis*.deb
+          if-no-files-found: error
+          retention-days: 5
+  publish-release:
+    needs: [create-release, bundle-linux]
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: mark release as non-draft
+        run: |
+          gh release edit ${{ needs.create-release.outputs.tag }} --draft=false
