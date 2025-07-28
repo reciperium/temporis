@@ -50,18 +50,13 @@ jobs:
       - name: Build desktop icon
         run: nix develop --command bash -c "just build__desktop-file"
       - name: Install cargo-packager
-        run: cargo install cargo-packager
+        run: cargo install -f cargo-packager --git https://github.com/crabnebula-dev/cargo-packager --branch fix/appimage-plugin
       - name: Bundle packages
-        run: cargo packager --formats deb
+        run: cargo packager --formats deb,appimage
       - name: Upload artifact
         run: |
-          gh release upload ${{ needs.create-release.outputs.tag }} bundle/deb/temporis_0.1.0_amd64.deb
-      - uses: actions/upload-artifact@v4
-        with:
-          name: temporis_amd64.deb
-          path: bundle/deb/temporis*.deb
-          if-no-files-found: error
-          retention-days: 5
+          gh release upload ${{ needs.create-release.outputs.tag }} bundle/temporis_0.1.0_amd64.deb
+          gh release upload ${{ needs.create-release.outputs.tag }} bundle/temporis_0.1.0_x86_64.AppImage
   publish-release:
     needs: [create-release, bundle-linux]
     runs-on: ubuntu-latest

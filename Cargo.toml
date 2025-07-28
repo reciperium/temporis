@@ -30,8 +30,9 @@ product-name = "Temporis"
 identifier = "com.reciperium.temporis"
 category = "Utility"
 resources = ["assets/icons/**"]
-out-dir = "bundle/deb/"
+out-dir = "bundle"
 license_file = "LICENSE"
+icons = ["assets/logos/*.png"]
 
 [package.metadata.packager.linux]
 # not wanted, as we create our own compliant desktop entry
@@ -42,4 +43,4 @@ files = { "nix-built-assets/share/applications/com.reciperium.temporis.desktop" 
 depends = ["libasound2-dev"]
 
 [package.metadata.packager.appimage]
-files = {}
+files = { "nix-built-assets/share/applications/com.reciperium.temporis.desktop" = "com.reciperium.temporis.desktop", "assets/icons/logo.svg" = "com.reciperium.temporis.svg" }
