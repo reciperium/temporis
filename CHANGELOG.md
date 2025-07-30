@@ -1,3 +1,10 @@
+## v0.3.0 (2025-07-30)
+
+### Feat
+
+- **mac**: attempt at building DMG
+- update dependencies
+
 ## v0.2.0 (2025-07-30)
 
 ### Feat
