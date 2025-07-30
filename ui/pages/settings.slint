@@ -157,19 +157,62 @@ export component Settings {
 
             HorizontalDivider { }
 
-            VerticalBox {
-                alignment: center;
-                spacing: 15pt;
+            popup := PopupWindow {
+                x: (parent.width - self.width) / 2;
+                y: (parent.height - self.height) / 2;
 
-                Link {
-                    text: "reciperium.com";
-                    url: "https://reciperium.com";
-                    vertical-alignment: center;
+                width: 90%;
+                Rectangle {
+                    border-color: Palette.border;
+                    border-width: 1pt;
+                    background: Palette.background;
+                    VerticalBox {
+                        alignment: center;
+                        spacing: 15pt;
+                        HorizontalLayout {
+                            alignment: center;
+                            spacing: 5pt;
+                            Text {
+                                text: @tr("Copyright");
+                            }
+
+                            Link {
+                                horizontal-alignment: center;
+                                text: "reciperium.com";
+                                url: "https://reciperium.com";
+                                vertical-alignment: center;
+                            }
+                        }
+
+                        Text {
+                            text: @tr("Author: Santiago Fraire Willemoes");
+                            horizontal-alignment: center;
+                        }
+
+                        Text {
+                            horizontal-alignment: center;
+                            text: @tr("Version: 0.1.0");
+                        }
+
+                        Text {
+                            horizontal-alignment: center;
+                            text: @tr("License GNU GPL v3");
+                        }
+
+                        Text {
+                            text: @tr("temporis-logo © 2025 by Lara Sitruk is licensed under CC BY 4.0");
+                            wrap: TextWrap.word-wrap;
+                            horizontal-alignment: center;
+                        }
+                    }
                 }
+            }
 
-                Text {
-                    text: @tr("temporis-logo © 2025 by Lara Sitruk is licensed under CC BY 4.0");
-                    wrap: TextWrap.word-wrap;
+            Button {
+                text: "About";
+                colorize-icon: true;
+                clicked() => {
+                    popup.show();
                 }
             }
         }
