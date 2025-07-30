@@ -43,8 +43,29 @@ jobs:
         run: |
           gh release upload ${{ github.ref_name }} bundle/temporis_*.deb
           gh release upload ${{ github.ref_name }} bundle/temporis_*.AppImage
+  bundle-mac:
+    runs-on: macos-13
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo
+            target/
+          key: ${{ runner.os }}-13-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Install cargo-packager
+        run: cargo install -f cargo-packager --git https://github.com/crabnebula-dev/cargo-packager --branch fix/appimage-plugin
+      - name: Bundle packages
+        run: cargo packager --formats dmg
+      - name: Upload artifact
+        run: |
+          gh release upload ${{ github.ref_name }} bundle/Temporis_*.dmg
   publish-release:
-    needs: bundle-linux
+    needs:
+      - bundle-linux
+      - bundle-mac
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
