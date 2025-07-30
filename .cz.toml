@@ -1,0 +1,8 @@
+[tool.commitizen]
+name = "cz_conventional_commits"
+tag_format = "v$version"
+version_scheme = "semver2"
+version_provider = "cargo"
+update_changelog_on_bump = true
+major_version_zero = true
+version_files = ["ui/pages/settings.slint:Version"]

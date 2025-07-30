@@ -79,7 +79,7 @@
             desktopName = "Temporis";
             genericName = "Pomodoro Application";
             icon = "com.reciperium.temporis";
-            comment = "Focus on intervals and take breaks to stimulate your productivity";
+            comment = "A pomodoro timer focused on attention and well-being";
             categories = [ "Utility" ];
             terminal = false;
             keywords = [
@@ -159,6 +159,7 @@
                 jq
                 cachix
                 gettext
+                commitizen
               ];
 
               shellHook = ''

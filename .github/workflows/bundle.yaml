@@ -13,22 +13,8 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  create-release:
-    runs-on: ubuntu-latest
-    outputs:
-      tag: ${{ github.ref_name }}
-      upload-url: ${{ steps.create-gh-release.outputs.upload_url }}
-    steps:
-      - uses: actions/checkout@v4
-      - name: Create a GitHub release
-        id: create-gh-release
-        uses: ncipollo/release-action@v1
-        with:
-          # tag: ${{ steps.tag_version.outputs.new_tag }}
-          draft: true
   bundle-linux:
     runs-on: ubuntu-22.04 # LTS
-    needs: create-release
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
@@ -55,10 +41,10 @@ jobs:
         run: cargo packager --formats deb,appimage
       - name: Upload artifact
         run: |
-          gh release upload ${{ needs.create-release.outputs.tag }} bundle/temporis_0.1.0_amd64.deb
-          gh release upload ${{ needs.create-release.outputs.tag }} bundle/temporis_0.1.0_x86_64.AppImage
+          gh release upload ${{ github.ref_name }} bundle/temporis_*.deb
+          gh release upload ${{ github.ref_name }} bundle/temporis_*.AppImage
   publish-release:
-    needs: [create-release, bundle-linux]
+    needs: bundle-linux
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -66,4 +52,4 @@ jobs:
       - uses: actions/checkout@v4
       - name: mark release as non-draft
         run: |
-          gh release edit ${{ needs.create-release.outputs.tag }} --draft=false
+          gh release edit ${{ github.ref_name }} --draft=false

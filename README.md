@@ -29,7 +29,8 @@ A [Reciperium](https://reciperium.com) application, [Reciperium](https://reciper
 
 - Linux
   - [x] Nix
-  - [ ] AppImage
+  - [x] AppImage
+  - [x] deb
 - MacOS
   - [x] Nix
   - [ ] DMG
