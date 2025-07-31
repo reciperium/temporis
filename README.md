@@ -33,7 +33,7 @@ A [Reciperium](https://reciperium.com) application, [Reciperium](https://reciper
   - [x] deb
 - MacOS
   - [x] Nix
-  - [ ] DMG
+  - [x] DMG
 
 ## Features
 
