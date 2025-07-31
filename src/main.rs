@@ -50,6 +50,10 @@ fn main() -> Result<(), slint::PlatformError> {
 
     main_window
         .global::<ExternalSystem>()
+        .set_cycles(config.cycles);
+
+    main_window
+        .global::<ExternalSystem>()
         .set_tick_sound(config.tick_sound);
 
     let shared_cfg = Rc::new(RefCell::new(config));
