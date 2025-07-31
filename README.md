@@ -6,7 +6,7 @@ _[temporis-logo](./assets/icons/logo.svg) © 2025 by [Lara Sitruk](https://www.i
 
 > A pomodoro timer focused on attention and well-being.
 
-<img src="docs/images/screenshot-main.png" alt="screenshot main window" height="600">
+<img src="assets/images/screenshot-linux-main.png" alt="screenshot main window" height="600">
 
 ## Installation
 
@@ -71,5 +71,5 @@ A [Reciperium](https://reciperium.com) application, [Reciperium](https://reciper
 - [makeDesktopItem](https://nixos.org/manual/nixpkgs/stable/#trivial-builder-makeDesktopItem) for NixOS
 
 <p align="center">
-    <img src="./docs/images/made-with-slint.png" alt="made with slint logo" width="200">
+    <img src="./assets/images/made-with-slint.png" alt="made with slint logo" width="200">
 </p>
