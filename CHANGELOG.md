@@ -1,3 +1,9 @@
+## v0.4.1 (2025-07-31)
+
+### Fix
+
+- set cycles based on the config
+
 ## v0.4.0 (2025-07-31)
 
 ### Feat
