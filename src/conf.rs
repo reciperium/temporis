@@ -6,6 +6,7 @@ const FOCUS_DURATION: i32 = 1500;
 const SHORT_BREAK_DURATION: i32 = 300;
 const LONG_BREAK_DURATION: i32 = 900;
 const SESSIONS: i32 = 4;
+const CYCLES: i32 = 16; // roughly 8 hours: 4 sessions, by 4 times
 
 #[derive(serde::Deserialize, serde::Serialize, Debug)]
 pub struct Config {
@@ -13,6 +14,7 @@ pub struct Config {
     pub short_break_duration: i32,
     pub long_break_duration: i32,
     pub sessions: i32,
+    pub cycles: i32,
     pub enable_notifications: bool,
     pub critical_notifications: bool,
     pub tick_sound: bool,
@@ -26,6 +28,7 @@ impl Config {
             .set_default("short_break_duration", SHORT_BREAK_DURATION)?
             .set_default("long_break_duration", LONG_BREAK_DURATION)?
             .set_default("sessions", SESSIONS)?
+            .set_default("cycles", CYCLES)?
             .set_default("enable_notifications", true)?
             .set_default("critical_notifications", true)?
             .set_default("tick_sound", true)?

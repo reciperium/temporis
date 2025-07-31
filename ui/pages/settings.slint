@@ -122,6 +122,24 @@ export component Settings {
                 }
 
                 Row {
+                    Text {
+                        text: @tr("Maximum number of cycles");
+                        vertical-alignment: center;
+                    }
+
+                    LineEdit {
+                        width: 40pt;
+                        placeholder-text: @tr("Number of cycles");
+                        input-type: number;
+                        text: ExternalSystem.cycles;
+                        edited(text) => {
+                            ExternalSystem.cycles = text.to-float();
+                            ExternalSystem.save_cycles(ExternalSystem.long_break_duration);
+                        }
+                    }
+                }
+
+                Row {
                     Switch {
                         text: @tr("Notifications");
                         checked: ExternalSystem.enable_notifications;

@@ -105,6 +105,18 @@ fn main() -> Result<(), slint::PlatformError> {
     let cfg_clone = shared_cfg.clone();
     main_window
         .global::<ExternalSystem>()
+        .on_save_cycles(move |value| {
+            let mut cfg_mut = cfg_clone.borrow_mut();
+            cfg_mut.cycles = value;
+            let r = cfg_mut.save();
+            if let Err(e) = r {
+                eprintln!("Error saving cycles amount: {}", e);
+            }
+        });
+
+    let cfg_clone = shared_cfg.clone();
+    main_window
+        .global::<ExternalSystem>()
         .on_save_enable_notifications(move |value| {
             let mut cfg_mut = cfg_clone.borrow_mut();
             cfg_mut.enable_notifications = value;

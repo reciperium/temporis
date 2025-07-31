@@ -14,21 +14,35 @@ export global ExternalSystem {
     in-out property <int> short_break_duration: 300; // 5 minutes
     in-out property <int> long_break_duration: 1200; // 20 minutes
     in-out property <int> sessions: 4;
+    in-out property <int> cycles: 4;
+
     in-out property <bool> enable_notifications: true;
     in-out property <bool> critical_notifications: true;
     in-out property <bool> tick_sound: true;
 
+    // Send a notification to the host OS
     callback notify(message: Message);
+
+    // Save different settings
     callback save_focus(value: int);
     callback save_short_break(value: int);
     callback save_long_break(value: int);
     callback save_sessions(value: int);
+    callback save_cycles(value: int);
     callback save_enable_notifications(value: bool);
     callback save_critical_notifications(value: bool);
     callback save_tick_sound(value: bool);
+
+    // Update the progress indicator on the app host
     callback update_progress(progress: float);
+
+    // On each interval completion, stop the progress indicator
     callback stop_progress();
+
+    // Exit the application
     callback exit();
+
+    // Allow native code to do something on_tick
     callback tick(current_interval: Interval);
 }
 
@@ -125,6 +139,7 @@ export global System {
         };
     }
 
+    // Executed when the current interval is completed
     public function next() {
         if System.status == Interval.Focus {
             System.sessionCount = System.sessionCount + 1;
@@ -132,9 +147,17 @@ export global System {
         if ExternalSystem.enable_notifications {
             ExternalSystem.notify(nextMessage(System.status));
         }
-        System.status = System.nextInterval(System.status, System.sessionCount);
-        System.value = System.getDuration(System.status);
-        ExternalSystem.stop_progress();
+        if System.sessionCount == ExternalSystem.cycles {
+            ExternalSystem.notify({
+                summary: @tr("Cycles Completed"),
+                body: @tr("Congratulations! You've completed all your cycles.")
+            });
+            System.reset();
+        } else {
+            System.status = System.nextInterval(System.status, System.sessionCount);
+            System.value = System.getDuration(System.status);
+            ExternalSystem.stop_progress();
+        }
     }
 
     pure function nextInterval(interval: Interval, sessionCount: int) -> Interval {
