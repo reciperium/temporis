@@ -1,3 +1,9 @@
+## v0.4.0 (2025-07-31)
+
+### Feat
+
+- add max cycles setting, allows auto-ending
+
 ## v0.3.0 (2025-07-30)
 
 ### Feat
