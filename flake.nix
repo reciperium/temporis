@@ -160,6 +160,7 @@
                 cachix
                 gettext
                 commitizen
+                nodejs_latest
               ];
 
               shellHook = ''
