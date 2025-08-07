@@ -41,6 +41,7 @@
         }:
         let
           gitignoreSource = gitignore.lib.gitignoreSource;
+          nodejs = pkgs.nodejs_latest;
 
           # rust
           rustChannel = "stable";
@@ -86,6 +87,14 @@
               "pomodoro"
               "timer"
               "productivity"
+            ];
+          };
+          src = pkgs.lib.fileset.toSource {
+            root = ./.;
+            fileset = pkgs.lib.fileset.unions [
+              ./site
+              ./assets/icons
+              ./assets/images
             ];
           };
         in
@@ -138,9 +147,28 @@
                 '';
               meta = meta;
             };
-            default = self'.packages.temporis-desktop;
+
+            site = pkgs.buildNpmPackage {
+              name = "site";
+              src = src;
+              sourceRoot = "${src.name}/site";
+              npmDeps = pkgs.importNpmLock {
+                npmRoot = ./site;
+              };
+              npmConfigHook = pkgs.importNpmLock.npmConfigHook;
+
+              buildPhase = ''
+                ${nodejs}/bin/npm run build --unsafe-perm=true
+              '';
+              installPhase = ''
+                mkdir -p $out
+                cp -R dist/* $out
+              '';
+              nodejs = nodejs;
+            };
 
             temporis-desktop-file = temporis-desktop-file;
+            default = self'.packages.temporis-desktop;
           };
 
           devShells = {
@@ -160,7 +188,7 @@
                 cachix
                 gettext
                 commitizen
-                nodejs_latest
+                nodejs
               ];
 
               shellHook = ''
