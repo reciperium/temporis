@@ -2,6 +2,7 @@
 .direnv
 result
 target
+dist
 # Added by cargo
 
 /target

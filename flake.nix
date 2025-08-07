@@ -41,6 +41,7 @@
         }:
         let
           gitignoreSource = gitignore.lib.gitignoreSource;
+          nodejs = pkgs.nodejs_latest;
 
           # rust
           rustChannel = "stable";
@@ -138,9 +139,35 @@
                 '';
               meta = meta;
             };
-            default = self'.packages.temporis-desktop;
+
+            site = pkgs.buildNpmPackage {
+              name = "site";
+              src = gitignore.lib.gitignoreSource (
+                pkgs.lib.fileset.toSource {
+                  root = ./.;
+                  fileset = pkgs.lib.fileset.unions [
+                    ./assets
+                    ./site
+                  ];
+                }
+              );
+              npmDeps = pkgs.importNpmLock {
+                npmRoot = ./site;
+              };
+              npmConfigHook = pkgs.importNpmLock.npmConfigHook;
+
+              nativeBuildInputs = [ nodejs ];
+              buildPhase = ''
+                ${nodejs}/bin/npm run build --unsafe-perm=true
+              '';
+              installPhase = ''
+                mkdir -p $out
+                cp -R dist/* $out
+              '';
+            };
 
             temporis-desktop-file = temporis-desktop-file;
+            default = self'.packages.temporis-desktop;
           };
 
           devShells = {
@@ -160,7 +187,7 @@
                 cachix
                 gettext
                 commitizen
-                nodejs_latest
+                nodejs
               ];
 
               shellHook = ''
