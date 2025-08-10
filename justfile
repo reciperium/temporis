@@ -10,6 +10,10 @@ build__bin:
 build__desktop-file:
     nix build .#temporis-desktop-file -o nix-built-assets
 
+# Build the website
+build__site:
+    nix build --show-trace .#site -o dist
+
 # Install the application for debug
 fresh-install:
     nix profile remove temporis-desktop || true

@@ -5,4 +5,7 @@ version_scheme = "semver2"
 version_provider = "cargo"
 update_changelog_on_bump = true
 major_version_zero = true
-version_files = ["ui/pages/settings.slint:Version"]
+version_files = [
+    "ui/pages/settings.slint:Version",
+    "site/index.html:reciperium/temporis/releases",
+]

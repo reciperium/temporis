@@ -16,7 +16,7 @@ nix profile install github:reciperium/temporis
 
 ## Why?
 
-A pomodoro application can help you switch between focus mode, where you can explore a single idea in depth, and diffusion mode,
+A pomodoro application can help you switch between focus mode, where you can explore a single idea in depth, and diffused mode,
 where you can let your mind wonder around, and subconsciously explore other ideas, avoiding the [Einstellung effect](https://en.wikipedia.org/wiki/Einstellung_effect).
 Furthermore, clear breaks give you space to stretch, move and hydrate.
 
@@ -33,11 +33,11 @@ A [Reciperium](https://reciperium.com) application, [Reciperium](https://reciper
   - [x] deb
 - MacOS
   - [x] Nix
-  - [ ] DMG
+  - [x] DMG
 
 ## Features
 
-- Switch between focus work and diffusion modes
+- Switch between focus work and diffused modes
 - Shortcuts
 - TOML Configuration
 - App style based on your OS
