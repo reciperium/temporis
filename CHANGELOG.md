@@ -1,3 +1,14 @@
+## v0.5.0 (2025-08-10)
+
+### Feat
+
+- **nix**: add build site package
+- add website
+
+### Fix
+
+- use cargo-packager from crates
+
 ## v0.4.1 (2025-07-31)
 
 ### Fix
