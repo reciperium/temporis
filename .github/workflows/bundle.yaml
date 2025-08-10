@@ -36,7 +36,7 @@ jobs:
       - name: Build desktop icon
         run: nix develop --command bash -c "just build__desktop-file"
       - name: Install cargo-packager
-        run: cargo install -f cargo-packager --git https://github.com/crabnebula-dev/cargo-packager --branch fix/appimage-plugin
+        run: cargo install -f cargo-packager
       - name: Bundle packages
         run: cargo packager --formats deb,appimage
       - name: Upload artifact
@@ -56,7 +56,7 @@ jobs:
             target/
           key: ${{ runner.os }}-13-cargo-${{ hashFiles('**/Cargo.lock') }}
       - name: Install cargo-packager
-        run: cargo install -f cargo-packager --git https://github.com/crabnebula-dev/cargo-packager --branch fix/appimage-plugin
+        run: cargo install -f cargo-packager
       - name: Bundle packages
         run: cargo packager --formats dmg
       - name: Upload artifact
