@@ -1,0 +1,24 @@
+name: "Website"
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-website:
+    if: "startsWith(github.event.head_commit.message, 'bump:')"
+    runs-on: ubuntu-latest
+    permissions: write-all
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install nix
+        uses: DeterminateSystems/nix-installer-action@main
+      - name: Cache build artifacts
+        uses: DeterminateSystems/flakehub-cache-action@main
+      - name: Build site package
+        run: |
+          nix build .#site -o dist
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: dist
