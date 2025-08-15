@@ -171,6 +171,17 @@ export component Settings {
                         }
                     }
                 }
+
+                Row {
+                    Switch {
+                        text: @tr("End session sound");
+                        checked: ExternalSystem.end_sound;
+                        toggled() => {
+                            ExternalSystem.end_sound = self.checked;
+                            ExternalSystem.save_end_sound(ExternalSystem.end_sound);
+                        }
+                    }
+                }
             }
 
             HorizontalDivider { }

@@ -19,9 +19,13 @@ export global ExternalSystem {
     in-out property <bool> enable_notifications: true;
     in-out property <bool> critical_notifications: true;
     in-out property <bool> tick_sound: true;
+    in-out property <bool> end_sound: true;
 
     // Send a notification to the host OS
     callback notify(message: Message);
+
+    // Play sound for the interval ending
+    callback play_end_sound(interval: Interval);
 
     // Save different settings
     callback save_focus(value: int);
@@ -32,6 +36,7 @@ export global ExternalSystem {
     callback save_enable_notifications(value: bool);
     callback save_critical_notifications(value: bool);
     callback save_tick_sound(value: bool);
+    callback save_end_sound(value: bool);
 
     // Update the progress indicator on the app host
     callback update_progress(progress: float);
@@ -156,6 +161,9 @@ export global System {
         }
         if ExternalSystem.enable_notifications {
             ExternalSystem.notify(nextMessage(System.status));
+        }
+        if ExternalSystem.end_sound {
+            ExternalSystem.play_end_sound(System.status);
         }
         if System.sessionCount == ExternalSystem.cycles {
             ExternalSystem.notify({

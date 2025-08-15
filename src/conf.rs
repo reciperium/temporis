@@ -10,14 +10,22 @@ const CYCLES: i32 = 16; // roughly 8 hours: 4 sessions, by 4 times
 
 #[derive(serde::Deserialize, serde::Serialize, Debug)]
 pub struct Config {
+    /// Focus in seconds
     pub focus_duration: i32,
     pub short_break_duration: i32,
     pub long_break_duration: i32,
+    /// Sessions before a long break
     pub sessions: i32,
+    /// Number of cycles before stopping
     pub cycles: i32,
+    /// Wether to send notification to the host
     pub enable_notifications: bool,
+    /// Notification will bypass Do Not Disturb
     pub critical_notifications: bool,
+    /// Ticking sound each second
     pub tick_sound: bool,
+    /// Make a sound at the end of a session
+    pub end_sound: bool,
 }
 
 impl Config {
@@ -32,6 +40,7 @@ impl Config {
             .set_default("enable_notifications", true)?
             .set_default("critical_notifications", true)?
             .set_default("tick_sound", true)?
+            .set_default("end_sound", true)?
             .add_source(
                 config::File::with_name(config_dir.join("config.toml").to_str().unwrap())
                     .required(false),

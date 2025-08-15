@@ -16,6 +16,8 @@ slint::slint! {
 }
 
 pub const TICK: &[u8] = include_bytes!("../assets/audio/tick.flac");
+pub const BELL_A: &[u8] = include_bytes!("../assets/audio/bell-a.flac");
+pub const BELL_B: &[u8] = include_bytes!("../assets/audio/bell-b.flac");
 
 fn main() -> Result<(), slint::PlatformError> {
     let config = Config::new().expect("config should be loaded correctly");
@@ -55,6 +57,10 @@ fn main() -> Result<(), slint::PlatformError> {
     main_window
         .global::<ExternalSystem>()
         .set_tick_sound(config.tick_sound);
+
+    main_window
+        .global::<ExternalSystem>()
+        .set_end_sound(config.end_sound);
 
     let shared_cfg = Rc::new(RefCell::new(config));
 
@@ -126,7 +132,7 @@ fn main() -> Result<(), slint::PlatformError> {
             cfg_mut.enable_notifications = value;
             let r = cfg_mut.save();
             if let Err(e) = r {
-                eprintln!("Error saving bypass dnd: {}", e);
+                eprintln!("Error saving enable_notifications: {}", e);
             }
         });
 
@@ -149,7 +155,19 @@ fn main() -> Result<(), slint::PlatformError> {
             cfg_mut.tick_sound = value;
             let r = cfg_mut.save();
             if let Err(e) = r {
-                eprintln!("Error saving bypass dnd: {}", e);
+                eprintln!("Error saving tick_sound: {}", e);
+            }
+        });
+
+    let cfg_clone = shared_cfg.clone();
+    main_window
+        .global::<ExternalSystem>()
+        .on_save_end_sound(move |value| {
+            let mut cfg_mut = cfg_clone.borrow_mut();
+            cfg_mut.end_sound = value;
+            let r = cfg_mut.save();
+            if let Err(e) = r {
+                eprintln!("Error saving end_sound: {}", e);
             }
         });
 
@@ -169,6 +187,20 @@ fn main() -> Result<(), slint::PlatformError> {
             eprintln!("Error sending notification: {}", e);
         }
     });
+
+    let audio_sink_rc = audio_sink.clone();
+    main_window
+        .global::<ExternalSystem>()
+        .on_play_end_sound(move |interval| match interval {
+            Interval::Focus => {
+                let source = Decoder::new(Cursor::new(BELL_A)).unwrap();
+                audio_sink_rc.append(source);
+            }
+            _ => {
+                let source = Decoder::new(Cursor::new(BELL_B)).unwrap();
+                audio_sink_rc.append(source);
+            }
+        });
 
     let cfg_clone = shared_cfg.clone();
     main_window.global::<ExternalSystem>().on_tick(

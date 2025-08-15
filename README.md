@@ -61,6 +61,9 @@ A [Reciperium](https://reciperium.com) application, [Reciperium](https://reciper
 - [Vadoola](https://github.com/Vadoola) for the display time equation using slint lang, as I was completely lost. [time-remaining()](https://github.com/Vadoola/Tomotroid/blob/main/ui/appwindow.slint#L88) and a lot of new nice libraries (e.g: rodio)
 - [Francis](https://github.com/KDE/francis) is a pomodoro app for KDE, built using the KDE Kirigami framework, I drew a lot of inspiration from it.
 - [metal_click_6.flac by qubodup](https://freesound.org/s/67610/) -- [License: Creative Commons 0](http://creativecommons.org/publicdomain/zero/1.0/)
+- [correct by ertfelda](https://freesound.org/people/ertfelda/sounds/243701/) -- [License: Creative Commons 0](http://creativecommons.org/publicdomain/zero/1.0/)
+- [Cowbell_OS_3.aif by timgormly](https://freesound.org/people/timgormly/sounds/159758/) -- [License: Creative Commons 0](http://creativecommons.org/publicdomain/zero/1.0/)
+
 
 ## Resources
 
