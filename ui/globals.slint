@@ -101,14 +101,24 @@ export global System {
     out property <[Message]> long_break_messages: [
         {
             summary: @tr("Break Ended"),
-            body: @tr("Time to get back to it. You're refreshed and ready!")
+            body: @tr("Time to get back to it. You're refreshed and ready!"),
+            critical: ExternalSystem.critical_notifications
         },
         {
             summary: @tr("Break Ended"),
-            body: @tr("Long break's done. What's next on your to-do list?")
+            body: @tr("Long break's done. What's next on your to-do list?"),
+            critical: ExternalSystem.critical_notifications
         },
-        { summary: @tr("Break Ended"), body: @tr("Feeling recharged? Let's finish strong!") },
-        { summary: @tr("Break Ended"), body: @tr("Focus time again. You got this!") },
+        {
+            summary: @tr("Break Ended"),
+            body: @tr("Feeling recharged? Let's finish strong!"),
+            critical: ExternalSystem.critical_notifications
+        },
+        {
+            summary: @tr("Break Ended"),
+            body: @tr("Focus time again. You got this!"),
+            critical: ExternalSystem.critical_notifications
+        },
     ];
     in-out property <int> message_count: 0;
 
