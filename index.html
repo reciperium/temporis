@@ -5,8 +5,8 @@
         <link rel="icon" type="image/svg+xml" href="/icons/logo.svg" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Temporis | A Pomodoro Timer for Focus and Well-being</title>
-      <script type="module" crossorigin src="/assets/index-BSwrotPE.js"></script>
-      <link rel="stylesheet" crossorigin href="/assets/index-DTYg4ndr.css">
+      <script type="module" crossorigin src="/assets/index-MemjdHLu.js"></script>
+      <link rel="stylesheet" crossorigin href="/assets/index-Bquy9BRY.css">
     </head>
     <body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
         <!-- Navigation -->
@@ -400,8 +400,14 @@
                                             Universal Linux package that runs on
                                             any distribution
                                         </p>
+                                        <p class="text-sm text-red-600 dark:text-red-300 mb-3 transition-colors duration-300">
+                                            Don't forget to give execution permissions with
+                                            <pre>
+                                                <code>chmod +x temporis*.AppImage</code>
+                                            </pre>
+                                        </p>
                                         <a
-                                            href="https://github.com/reciperium/temporis/releases/download/v0.5.1/temporis_0.5.1_x86_64.AppImage"
+                                            href="https://github.com/reciperium/temporis/releases/download/v0.6.0/temporis_0.6.0_x86_64.AppImage"
                                             class="inline-flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200"
                                         >
                                             <svg
@@ -419,6 +425,33 @@
                                             </svg>
                                             <span>Download AppImage</span>
                                         </a>
+                                    </div>
+                                    <div
+                                        class="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 transition-colors duration-300"
+                                    >
+                                        <h4
+                                            class="font-medium text-gray-900 dark:text-white mb-2 transition-colors duration-300"
+                                        >
+                                            Ubuntu
+                                        </h4>
+                                        <p
+                                            class="text-sm text-gray-600 dark:text-gray-300 mb-3 transition-colors duration-300"
+                                        >
+                                            Ubuntu requires some special
+                                            instructions for app images, since
+                                            they made some changes on apparmor.
+                                            We are going to allow the
+                                            ~/Applications directory to be used
+                                            for app images.
+                                        </p>
+                                        <div class="">
+                                            <pre>
+                                                <code
+                                                    id="apparmor-config"
+                                                    class="language-sh text-left whitespace-pre rounded-md"
+                                                ></code>
+                                            </pre>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -456,7 +489,7 @@
                                             For Debian, Ubuntu, and derivatives
                                         </p>
                                         <a
-                                            href="https://github.com/reciperium/temporis/releases/download/v0.5.1/temporis_0.5.1_amd64.deb"
+                                            href="https://github.com/reciperium/temporis/releases/download/v0.6.0/temporis_0.6.0_amd64.deb"
                                             class="inline-flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200"
                                         >
                                             <svg
@@ -484,11 +517,13 @@
                                         >
                                             Instructions
                                         </h4>
-                                        <div
-                                            class="bg-gray-900 dark:bg-gray-950 rounded p-3 font-mono text-sm text-green-400 dark:text-green-300 transition-colors duration-300"
-                                        >
-                                            sudo apt -y install
-                                            ./temporis_0.4.1_amd64.deb
+                                        <div class="">
+                                            <pre>
+                                                <code class="language-sh text-center whitespace-normal rounded-md">
+                                                    sudo apt -y install
+                                                    ./temporis_0.6.0_amd64.deb
+                                                </code>
+                                            </pre>
                                         </div>
                                     </div>
                                 </div>
@@ -623,11 +658,13 @@
                                         >
                                             Instructions
                                         </h4>
-                                        <div
-                                            class="bg-gray-900 dark:bg-gray-950 rounded p-3 font-mono text-sm text-green-400 dark:text-green-300 transition-colors duration-300"
-                                        >
-                                            nix profile install
-                                            github:reciperium/temporis
+                                        <div>
+                                            <pre>
+                                                <code class="language-sh text-center whitespace-normal rounded-md">
+                                                nix profile install
+                                                github:reciperium/temporis
+                                                </code>
+                                            </pre>
                                         </div>
                                     </div>
                                 </div>
