@@ -1,3 +1,13 @@
+## v0.6.0 (2025-08-15)
+
+### Feat
+
+- add bell sound at the end of an interval
+
+### Fix
+
+- **ui**: use criticial_notifications settings in long-break message
+
 ## v0.5.1 (2025-08-10)
 
 ### Fix
