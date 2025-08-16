@@ -43,7 +43,7 @@ function insertAppArmorConfig() {
   const apparmorscript = `
 mkdir ~/Applications
 
-cat << 'EOF' > "/etc/apparmor.d/applications"
+cat << EOF | sudo tee "/etc/apparmor.d/applications"
 abi <abi/4.0>,
 include <tunables/global>
 
