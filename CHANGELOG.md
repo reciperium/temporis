@@ -1,3 +1,9 @@
+## v0.6.1 (2025-08-16)
+
+### Fix
+
+- **site**: update script for appimage
+
 ## v0.6.0 (2025-08-15)
 
 ### Feat
