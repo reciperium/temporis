@@ -26,7 +26,8 @@ zbus = "5.7.1"
 [package.metadata.packager]
 before-packaging-command = "cargo build --release"
 binaries_dir = "target/release"
-product-name = "Temporis"
+name = "temporis"
+product-name = "temporis"
 identifier = "com.reciperium.temporis"
 category = "Utility"
 resources = ["assets/icons/**"]
