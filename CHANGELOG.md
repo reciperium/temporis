@@ -1,3 +1,9 @@
+## v0.6.3 (2025-08-25)
+
+### Fix
+
+- **ci**: correct mac bundle name
+
 ## v0.6.2 (2025-08-24)
 
 ### Fix
