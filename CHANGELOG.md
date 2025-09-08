@@ -1,3 +1,10 @@
+## v0.6.4 (2025-09-08)
+
+### Fix
+
+- bump dependencies
+- **ci**: fix link to DMG
+
 ## v0.6.3 (2025-08-25)
 
 ### Fix
