@@ -23,6 +23,9 @@ fresh-install:
 flake__update:
     nix flake update
 
+cargo__update:
+    cargo update
+
 # Extract translations
 translations__extract:
     find ui/ -name \*.slint | xargs slint-tr-extractor -o po/en/temporis.po
