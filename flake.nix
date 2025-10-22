@@ -37,6 +37,7 @@
           pkgs,
           inputs',
           self',
+          system,
           ...
         }:
         let
@@ -64,6 +65,7 @@
               fontconfig
               libGL
             ];
+          rustflags = with pkgs; lib.optionals stdenv.isLinux "-C link-self-contained=-linker" "";
 
           # app
           meta = {
@@ -104,7 +106,11 @@
               # name = "temporis";
               src = gitignoreSource ./.;
               strictDeps = true;
-              nativeBuildInputs = with pkgs; [ pkgconf ];
+              nativeBuildInputs = with pkgs; [
+                pkgconf
+                rustPlatform.bindgenHook
+                llvmPackages.bintools
+              ];
 
               buildInputs =
                 with pkgs;
@@ -114,6 +120,9 @@
                   makeWrapper
                 ];
               meta = meta;
+              env = pkgs.lib.optionalAttrs (system == "x86_64-linux") {
+                RUSTFLAGS = "-C link-self-contained=-linker";
+              };
             };
             # installable for NixOS
             temporis-desktop = pkgs.stdenv.mkDerivation {
@@ -196,6 +205,7 @@
               '';
 
               LD_LIBRARY_PATH = "\$LD_LIBRARY_PATH:${ldLibraryPath}";
+
             };
           };
         };

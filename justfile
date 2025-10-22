@@ -19,10 +19,14 @@ fresh-install:
     nix profile remove temporis-desktop || true
     nix profile install --show-trace .#temporis-desktop
 
-# Update dependencies
+# Update all dependencies
+update: flake__update cargo__update
+
+# Update nix dependencies
 flake__update:
     nix flake update
 
+# Update cargo dependencies
 cargo__update:
     cargo update
 
