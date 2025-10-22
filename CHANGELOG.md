@@ -1,3 +1,10 @@
+## v0.6.6 (2025-10-22)
+
+### Fix
+
+- bump dependencies
+- **macos**: attempt at fixing notifications in macos
+
 ## v0.6.5 (2025-10-12)
 
 ### Fix
