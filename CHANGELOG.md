@@ -1,3 +1,9 @@
+## v0.6.7 (2025-10-22)
+
+### Fix
+
+- **macos**: attempt at notifications in MacOS
+
 ## v0.6.6 (2025-10-22)
 
 ### Fix
