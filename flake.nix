@@ -64,8 +64,17 @@
               libxkbcommon
               fontconfig
               libGL
+              xorg.libX11
+              xorg.libXcursor
+              xorg.libXi
+              alsa-lib
+              libinput
+              libgbm
+              freetype
+
+              # libinput-gestures
+              # glibc
             ];
-          rustflags = with pkgs; lib.optionals stdenv.isLinux "-C link-self-contained=-linker" "";
 
           # app
           meta = {
