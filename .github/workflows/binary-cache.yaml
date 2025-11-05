@@ -26,6 +26,4 @@ jobs:
           authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
       - name: Build default package
         run: |
-          nix build --json \
-          | jq -r '.[].outputs | to_entries[].value' \
-          | cachix push reciperium
+          nix build --no-link --print-out-paths | cachix push reciperium
