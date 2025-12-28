@@ -4,6 +4,11 @@ on:
   push:
     branches:
       - "main"
+    paths-ignore:
+      - ".github/**"
+      - "site/**"
+      - ".envrc"
+      - ".gitignore"
 
 jobs:
   bump-version:
