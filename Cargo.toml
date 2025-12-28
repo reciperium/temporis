@@ -1,6 +1,6 @@
 [package]
 name = "temporis"
-version = "0.7.0"
+version = "0.7.1"
 edition = "2024"
 license-file = "LICENSE"
 description = "A pomodoro timer focused on attention and well-being"

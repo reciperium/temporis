@@ -1,3 +1,10 @@
+## v0.7.1 (2025-12-28)
+
+### Fix
+
+- **cargo**: bump deps
+- bump flake
+
 ## v0.7.0 (2025-11-05)
 
 ### Feat
