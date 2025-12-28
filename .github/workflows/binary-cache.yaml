@@ -1,8 +1,8 @@
 name: "Deploy binary cache"
 on:
   push:
-    branches:
-      - main
+    tags:
+      - "v*"
 
 jobs:
   build:
