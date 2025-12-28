@@ -61,7 +61,7 @@ jobs:
         run: cargo packager --formats dmg
       - name: Upload artifact
         run: |
-          gh release upload ${{ github.ref_name }} bundle/temporis_*.dmg
+          gh release upload ${{ github.ref_name }} bundle/*emporis_*.dmg
   publish-release:
     needs:
       - bundle-linux

@@ -8,7 +8,7 @@ pub struct MacOsNotificationIntegration;
 
 impl NotificationIntegration for MacOsNotificationIntegration {
     fn send(&self, message: &OsMessage) -> Result<(), NotificationError> {
-        notify_rust::set_application("com.reciperium.Temporis");
+        notify_rust::set_application("com.reciperium.temporis");
         let res = Notification::new()
             .summary(&message.summary)
             .body(&message.body)
