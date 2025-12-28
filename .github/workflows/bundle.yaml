@@ -44,7 +44,7 @@ jobs:
           gh release upload ${{ github.ref_name }} bundle/temporis_*.deb
           gh release upload ${{ github.ref_name }} bundle/temporis_*.AppImage
   bundle-mac:
-    runs-on: macos-13
+    runs-on: macos-latest
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
