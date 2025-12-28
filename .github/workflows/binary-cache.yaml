@@ -14,12 +14,12 @@ jobs:
           - ubuntu-latest
           - macos-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install nix
         uses: DeterminateSystems/nix-installer-action@main
       - name: Cache build artifacts
         uses: DeterminateSystems/flakehub-cache-action@main
-      - uses: cachix/cachix-action@v14
+      - uses: cachix/cachix-action@v16
         with:
           name: reciperium
           # If you chose API tokens for write access OR if you have a private cache

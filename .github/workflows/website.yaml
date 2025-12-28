@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions: write-all
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install nix
         uses: DeterminateSystems/nix-installer-action@main
       - name: Cache build artifacts
