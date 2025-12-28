@@ -1,3 +1,10 @@
+## v0.7.2 (2025-12-28)
+
+### Fix
+
+- attempt at correct configuration
+- **ci**: use macos latest runner
+
 ## v0.7.1 (2025-12-28)
 
 ### Fix
