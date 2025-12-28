@@ -9,7 +9,8 @@ updates:
       time: "06:00"
     cooldown:
       default-days: 7
-
+    commit-message:
+      prefix: "fix(cargo)"
     # Group all Rust updates into one PR
     groups:
       all-cargo-dependencies:
