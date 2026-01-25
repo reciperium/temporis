@@ -1,3 +1,10 @@
+## v0.7.4 (2026-01-25)
+
+### Fix
+
+- errors in rodio
+- **ci**: change if condition
+
 ## v0.7.3 (2026-01-25)
 
 ### Fix

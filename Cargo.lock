@@ -4492,7 +4492,7 @@ dependencies = [
 
 [[package]]
 name = "temporis"
-version = "0.7.3"
+version = "0.7.4"
 dependencies = [
  "config",
  "directories",
