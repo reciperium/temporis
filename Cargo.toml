@@ -11,17 +11,17 @@ authors = ["Santiago Fraire Willemoes <santiwilly@gmail.com>"]
 
 [dependencies]
 config = { version = "0.15.11", features = ["toml"] }
-toml = "0.8.23"
+toml = "0.9.10"
 directories = "6.0.0"
 notify-rust = "4.11.7"
 serde = { version = "1.0.219", features = ["derive"] }
 slint = "1.11.0"
 thiserror = "2.0.12"
-rodio = "0.20.1"
+rodio = "0.21.1"
 webbrowser = "1.0.5"
 
 [target.'cfg(target_os = "linux")'.dependencies]
-zbus = "5.7.1"
+zbus = "5.13.1"
 
 [package.metadata.packager]
 before-packaging-command = "cargo build --release"
