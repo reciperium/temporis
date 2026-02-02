@@ -21,7 +21,7 @@ rodio = "0.21.1"
 webbrowser = "1.0.5"
 
 [target.'cfg(target_os = "linux")'.dependencies]
-zbus = "5.13.1"
+zbus = "5.13.2"
 
 [package.metadata.packager]
 before-packaging-command = "cargo build --release"
