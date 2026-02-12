@@ -64,14 +64,13 @@
               libxkbcommon
               fontconfig
               libGL
-              xorg.libX11
-              xorg.libXcursor
-              xorg.libXi
+              libx11
+              libxcursor
+              libxi
               alsa-lib
               libinput
               libgbm
               freetype
-
               # libinput-gestures
               # glibc
             ];
@@ -115,8 +114,10 @@
               # name = "temporis";
               src = gitignoreSource ./.;
               strictDeps = true;
+
               nativeBuildInputs = with pkgs; [
-                pkgconf
+                # fontconfig
+                pkg-config
                 rustPlatform.bindgenHook
                 llvmPackages.bintools
               ];
@@ -125,6 +126,7 @@
                 with pkgs;
                 [ ]
                 ++ lib.optionals stdenv.isLinux [
+                  fontconfig
                   alsa-lib
                   makeWrapper
                 ];
@@ -197,7 +199,6 @@
               buildInputs = with pkgs; [
                 just
                 rustToolchain
-                pkgconf
                 alsa-lib
                 slint-viewer
                 slint-lsp
