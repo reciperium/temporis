@@ -1,3 +1,10 @@
+## v0.7.7 (2026-02-12)
+
+### Fix
+
+- bump dependencies
+- **site**: apparmor config
+
 ## v0.7.6 (2026-02-09)
 
 ### Fix
