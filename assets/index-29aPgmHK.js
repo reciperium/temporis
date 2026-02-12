@@ -14,7 +14,7 @@ cat << EOF | sudo tee "/etc/apparmor.d/applications"
 abi <abi/4.0>,
 include <tunables/global>
 
-profile apps /home/woile/Applications/*.AppImage flags=(unconfined) {
+profile apps @{HOME}/Applications/*.AppImage flags=(unconfined) {
   userns,
 }
 EOF
