@@ -11,11 +11,11 @@ authors = ["Santiago Fraire Willemoes <santiwilly@gmail.com>"]
 
 [dependencies]
 config = { version = "0.15.11", features = ["toml"] }
-toml = "0.9.11"
+toml = "1.0.1"
 directories = "6.0.0"
 notify-rust = "4.12.0"
 serde = { version = "1.0.219", features = ["derive"] }
-slint = "1.11.0"
+slint = "1.15.1"
 thiserror = "2.0.18"
 rodio = "0.21.1"
 webbrowser = "1.0.5"
