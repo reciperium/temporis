@@ -23,7 +23,7 @@ jobs:
         uses: DeterminateSystems/nix-installer-action@main
       - name: Cache build artifacts
         uses: DeterminateSystems/flakehub-cache-action@main
-      - uses: cachix/cachix-action@v16
+      - uses: cachix/cachix-action@v17
         with:
           name: reciperium
       - name: Build default package
