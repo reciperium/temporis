@@ -38,6 +38,7 @@
           inputs',
           self',
           system,
+          lib,
           ...
         }:
         let
@@ -112,7 +113,18 @@
           packages = {
             temporis-bin = craneLib.buildPackage {
               # name = "temporis";
-              src = gitignoreSource ./.;
+              src = lib.fileset.toSource {
+                root = ./.;
+                fileset = lib.fileset.unions [
+                  ./ui
+                  ./Cargo.toml
+                  ./Cargo.lock
+                  ./assets/audio
+                  ./assets/icons
+                  ./assets/logos
+                  ./src
+                ];
+              };
               strictDeps = true;
 
               nativeBuildInputs = with pkgs; [
