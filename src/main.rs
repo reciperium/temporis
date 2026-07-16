@@ -1,6 +1,6 @@
 use std::{cell::RefCell, io::Cursor, rc::Rc};
 
-use rodio::{Decoder, OutputStreamBuilder, Sink};
+use rodio::{Decoder, DeviceSinkBuilder, Player};
 use slint::{CloseRequestResponse, set_xdg_app_id};
 use temporis::{
     conf::Config,
@@ -24,9 +24,9 @@ fn main() -> Result<(), slint::PlatformError> {
     let main_window = AppWindow::new()?;
 
     // Initialize audio sink
-    let output_stream = OutputStreamBuilder::open_default_stream()
+    let output_stream = DeviceSinkBuilder::open_default_sink()
         .expect("audio stream should be opened correctly");
-    let audio_sink = Rc::new(Sink::connect_new(&output_stream.mixer()));
+    let audio_sink = Rc::new(Player::connect_new(&output_stream.mixer()));
     audio_sink.set_volume(0.5);
 
     _ = set_xdg_app_id("com.reciperium.temporis");
