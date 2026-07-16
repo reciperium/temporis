@@ -2,26 +2,10 @@
 name = "temporis"
 version = "0.7.7"
 edition = "2024"
-license-file = "LICENSE"
 description = "A pomodoro timer focused on attention and well-being"
 readme = "README.md"
-repository = "https://github.com/reciperium/temporis"
-authors = ["Santiago Fraire Willemoes <santiwilly@gmail.com>"]
-
-
-[dependencies]
-config = { version = "0.15.11", features = ["toml"] }
-toml = "0.9.11"
-directories = "6.0.0"
-notify-rust = "4.12.0"
-serde = { version = "1.0.219", features = ["derive"] }
-slint = "1.11.0"
-thiserror = "2.0.18"
-rodio = "0.22"
-webbrowser = "1.0.5"
-
-[target.'cfg(target_os = "linux")'.dependencies]
-zbus = "5.13.2"
+repository = "https://github.com/reciperium/temporis/"
+license-file = "LICENSE"
 
 [package.metadata.packager]
 before-packaging-command = "cargo build --release"
@@ -44,4 +28,18 @@ files = { "nix-built-assets/share/applications/com.reciperium.temporis.desktop" 
 depends = ["libasound2-dev"]
 
 [package.metadata.packager.appimage]
-files = { "nix-built-assets/share/applications/com.reciperium.temporis.desktop" = "com.reciperium.temporis.desktop", "assets/icons/logo.svg" = "com.reciperium.temporis.svg" }
+files = { "nix-built-assets/share/applications/com.reciperium.temporis.desktop" = "com.reciperium.temporis.desktop", "assets/icons/logo.svg" = "com.reciperium.temporis.svg"}
+
+[dependencies]
+config = { version = "0.15.11", features = ["toml"] }
+directories = "6.0.0"
+notify-rust = "4.12.0"
+rodio = "0.22"
+serde = { version = "1.0.219", features = ["derive"] }
+slint = "1.17"
+thiserror = "2.0.18"
+toml = "1"
+webbrowser = "1.0.5"
+
+[target.'cfg(target_os = "linux")'.dependencies]
+zbus = "5.13.2"
