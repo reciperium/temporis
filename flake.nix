@@ -9,15 +9,11 @@
     crane = {
       url = "github:ipetkov/crane";
     };
-
-    gitignore.url = "github:hercules-ci/gitignore.nix";
-    gitignore.inputs.nixpkgs.follows = "nixpkgs";
   };
   outputs =
     inputs@{
       flake-parts,
       crane,
-      gitignore,
       self,
       ...
     }:
@@ -42,7 +38,6 @@
           ...
         }:
         let
-          gitignoreSource = gitignore.lib.gitignoreSource;
           nodejs = pkgs.nodejs_latest;
 
           # rust
@@ -81,7 +76,7 @@
             description = "A Pomodoro application helping you stay focused, fresh and healthy";
             longDescription = "Temporis is a Pomodoro application designed to help you seamlessly switch between focused work and periods of diffused thinking";
             homepage = "https://github.com/reciperium/temporis";
-            license = with pkgs; lib.licenses.gpl3;
+            license = lib.licenses.gpl3;
             platforms = systems;
             mainProgram = "temporis";
           };
@@ -206,7 +201,9 @@
           devShells = {
             default = pkgs.mkShell {
               name = "dev";
-
+              nativeBuildInputs = [
+                pkgs.pkg-config
+              ];
               # Available packages on https://search.nixos.org/packages
               buildInputs = with pkgs; [
                 just
@@ -218,8 +215,8 @@
                 jq
                 cachix
                 gettext
-                commitizen
                 nodejs
+                fontconfig
               ];
 
               shellHook = ''
