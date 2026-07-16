@@ -1,3 +1,15 @@
+## v0.8.0 (2026-07-16)
+
+### Feat
+
+- bump cargo deps
+- bump lock deps and add missing pkgs-config to shell
+
+### Fix
+
+- **rodio**: migrate to latest
+- **flake**: more reproducible to hit cache
+
 ## v0.7.7 (2026-02-12)
 
 ### Fix
