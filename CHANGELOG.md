@@ -1,3 +1,10 @@
+## v0.8.1 (2026-09-13)
+
+### Fix
+
+- bump dependencies
+- use channels.nixos.org
+
 ## v0.8.0 (2026-07-16)
 
 ### Feat
