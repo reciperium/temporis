@@ -35,11 +35,11 @@ config = { version = "0.15.11", features = ["toml"] }
 directories = "6.0.0"
 notify-rust = "4.12.0"
 rodio = "0.22"
-serde = { version = "1.0.219", features = ["derive"] }
+serde = { version = "1", features = ["derive"] }
 slint = "1.17"
-thiserror = "2.0.18"
+thiserror = "2"
 toml = "1"
-webbrowser = "1.0.5"
+webbrowser = "1"
 
 [target.'cfg(target_os = "linux")'.dependencies]
 zbus = "5.13.2"
