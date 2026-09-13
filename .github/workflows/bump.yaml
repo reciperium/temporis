@@ -16,20 +16,46 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      actions: write
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           token: "${{ secrets.PERSONAL_ACCESS_TOKEN }}"
           fetch-depth: 0
-      - name: Create bump and changelog
-        uses: commitizen-tools/commitizen-action@master
+      - uses: commitizen-tools/setup-cz@main
         with:
-          github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          changelog_increment_filename: body.md
-      - name: Create Release
-        uses: ncipollo/release-action@v1
-        with:
-          tag: v${{ env.REVISION }}
-          bodyFile: "body.md"
-          skipIfReleaseExists: true
-          draft: true
+          python-version: "3.x"
+      - id: bump-version
+        run: |
+          old_sha="$(git rev-parse HEAD)"
+          # Pass `--no-raise 21` so that pushing only non-bump-eligible commits
+          # (e.g. docs:, ci:, build(deps):) does not fail the workflow. Note
+          # that `--no-raise` is a top-level option and must come before the
+          # `bump` subcommand. Exit code 21 is NO_COMMITS_TO_BUMP.
+          cz --no-raise 21 bump --yes --annotated-tag
+
+          if [ "$(git rev-parse HEAD)" = "$old_sha" ]; then
+            echo "No bump-eligible commits found, skipping release."
+            echo "bumped=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          echo "bumped=true" >> $GITHUB_OUTPUT
+          git push --follow-tags
+          new_version="$(cz version -p)"
+          echo "new_version=$new_version" >> $GITHUB_OUTPUT
+          new_version_tag="$(cz version -p --tag)"
+          echo "new_version_tag=$new_version_tag" >> $GITHUB_OUTPUT
+      - name: Build changelog for Release
+        if: steps.bump-version.outputs.bumped == 'true'
+        env:
+          NEW_VERSION: ${{ steps.bump-version.outputs.new_version }}
+        run: |
+          cz changelog --dry-run "${NEW_VERSION}" > .changelog.md
+      - name: Release
+        if: steps.bump-version.outputs.bumped == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NEW_VERSION_TAG: ${{ steps.bump-version.outputs.new_version_tag }}
+        run: |
+          gh release create "${NEW_VERSION_TAG}" --notes-file .changelog.md
