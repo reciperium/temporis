@@ -16,7 +16,20 @@ updates:
       all-cargo-dependencies:
         patterns:
           - "*"
-
+  - package-ecosystem: "nix"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+    commit-message:
+      prefix: "fix(nix)"
+    cooldown:
+      default-days: 7
+    groups:
+      flake-inputs:
+        patterns:
+          - "*"
   # Maintain GitHub Actions (e.g., actions/checkout)
   - package-ecosystem: "github-actions"
     directory: "/"
