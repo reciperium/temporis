@@ -1,4 +1,4 @@
-use std::{cell::RefCell, io::Cursor, rc::Rc};
+use std::{cell::RefCell, io::Cursor, rc::Rc, sync::Arc};
 
 use rodio::{Decoder, DeviceSinkBuilder, Player};
 use slint::{CloseRequestResponse, set_xdg_app_id};
@@ -18,6 +18,10 @@ slint::slint! {
 pub const TICK: &[u8] = include_bytes!("../assets/audio/tick.flac");
 pub const BELL_A: &[u8] = include_bytes!("../assets/audio/bell-a.flac");
 pub const BELL_B: &[u8] = include_bytes!("../assets/audio/bell-b.flac");
+pub const TICK_CURSOR: Cursor<&[u8]> = Cursor::new(TICK);
+pub const BELL_A_CURSOR: Cursor<&[u8]> = Cursor::new(BELL_A);
+pub const BELL_B_CURSOR: Cursor<&[u8]> = Cursor::new(BELL_B);
+
 
 fn main() -> Result<(), slint::PlatformError> {
     let config = Config::new().expect("config should be loaded correctly");
@@ -194,11 +198,11 @@ fn main() -> Result<(), slint::PlatformError> {
         .global::<ExternalSystem>()
         .on_play_end_sound(move |interval| match interval {
             Interval::Focus => {
-                let source = Decoder::new(Cursor::new(BELL_A)).unwrap();
+                let source = Decoder::new(BELL_A_CURSOR).expect("Focus Bell failed");
                 audio_sink_rc.append(source);
             }
             _ => {
-                let source = Decoder::new(Cursor::new(BELL_B)).unwrap();
+                let source = Decoder::new(BELL_B_CURSOR).expect("Break Bell failed");
                 audio_sink_rc.append(source);
             }
         });
@@ -208,8 +212,8 @@ fn main() -> Result<(), slint::PlatformError> {
         move |current_interval| match current_interval {
             Interval::Focus => {
                 if cfg_clone.borrow().tick_sound {
-                    let source = Decoder::new(Cursor::new(TICK)).unwrap();
-                    audio_sink.append(source);
+                    let deco = Decoder::new(TICK_CURSOR).expect("Tick failed");
+                    audio_sink.append(deco);
                 }
             }
             _ => {}
