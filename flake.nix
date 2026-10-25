@@ -6,14 +6,10 @@
       url = "github:nix-community/fenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    crane = {
-      url = "github:ipetkov/crane";
-    };
   };
   outputs =
     inputs@{
       flake-parts,
-      crane,
       self,
       ...
     }:
@@ -47,12 +43,14 @@
             fenix.combine [
               fenix.${rustChannel}.toolchain
               # https://doc.rust-lang.org/rustc/platform-support.html
-              # For more targets add:
-              # fenix.targets.aarch64-linux-android."${rustChannel}".rust-std
-              # fenix.targets.wasm32-wasip1."${rustChannel}".rust-std
             ]
           );
-          craneLib = (crane.mkLib pkgs).overrideToolchain rustToolchain;
+          rustplatform = pkgs.makeRustPlatform {
+            cargo = rustToolchain;
+            rustc = rustToolchain;
+          };
+          cargoToml = fromTOML (builtins.readFile ./Cargo.toml);
+
           ldLibraryPath =
             with pkgs;
             lib.makeLibraryPath [
@@ -106,8 +104,9 @@
         in
         {
           packages = {
-            temporis-bin = craneLib.buildPackage {
-              # name = "temporis";
+            temporis-bin = rustplatform.buildRustPackage {
+              pname = cargoToml.package.name;
+              version = cargoToml.package.version;
               src = lib.fileset.toSource {
                 root = ./.;
                 fileset = lib.fileset.unions [
@@ -121,12 +120,14 @@
                 ];
               };
               strictDeps = true;
-
+              cargoLock = {
+                lockFile = ./Cargo.lock;
+                allowBuiltinFetchGit = true;
+              };
               nativeBuildInputs = with pkgs; [
-                # fontconfig
                 pkg-config
-                rustPlatform.bindgenHook
                 llvmPackages.bintools
+                removeReferencesTo
               ];
 
               buildInputs =
@@ -141,6 +142,9 @@
               env = pkgs.lib.optionalAttrs (system == "x86_64-linux") {
                 RUSTFLAGS = "-C link-self-contained=-linker";
               };
+              postFixup = ''
+                remove-references-to -t ${rustToolchain} $out/bin/temporis
+              '';
             };
             # installable for NixOS
             temporis-desktop = pkgs.stdenv.mkDerivation {
