@@ -1,3 +1,4 @@
+pub mod audio;
 pub mod conf;
 pub mod error;
 pub mod platform;

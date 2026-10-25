@@ -1,8 +1,8 @@
-use std::{cell::RefCell, io::Cursor, rc::Rc, sync::Arc};
+use std::{cell::RefCell, rc::Rc, time::Duration};
 
-use rodio::{Decoder, DeviceSinkBuilder, Player};
 use slint::{CloseRequestResponse, set_xdg_app_id};
 use temporis::{
+    audio::Audio,
     conf::Config,
     platform::{get_notifications_integration, get_progress_integration},
     platform_interfaces::{
@@ -15,23 +15,10 @@ slint::slint! {
     export { ExternalSystem, AppWindow, Interval, LinkEvent } from "ui/main.slint";
 }
 
-pub const TICK: &[u8] = include_bytes!("../assets/audio/tick.flac");
-pub const BELL_A: &[u8] = include_bytes!("../assets/audio/bell-a.flac");
-pub const BELL_B: &[u8] = include_bytes!("../assets/audio/bell-b.flac");
-pub const TICK_CURSOR: Cursor<&[u8]> = Cursor::new(TICK);
-pub const BELL_A_CURSOR: Cursor<&[u8]> = Cursor::new(BELL_A);
-pub const BELL_B_CURSOR: Cursor<&[u8]> = Cursor::new(BELL_B);
-
-
 fn main() -> Result<(), slint::PlatformError> {
     let config = Config::new().expect("config should be loaded correctly");
     let main_window = AppWindow::new()?;
-
-    // Initialize audio sink
-    let output_stream = DeviceSinkBuilder::open_default_sink()
-        .expect("audio stream should be opened correctly");
-    let audio_sink = Rc::new(Player::connect_new(&output_stream.mixer()));
-    audio_sink.set_volume(0.5);
+    let audio = Audio::new();
 
     _ = set_xdg_app_id("com.reciperium.temporis");
 
@@ -193,27 +180,29 @@ fn main() -> Result<(), slint::PlatformError> {
         }
     });
 
-    let audio_sink_rc = audio_sink.clone();
+    let audio_rc = audio.clone();
     main_window
         .global::<ExternalSystem>()
         .on_play_end_sound(move |interval| match interval {
             Interval::Focus => {
-                let source = Decoder::new(BELL_A_CURSOR).expect("Focus Bell failed");
-                audio_sink_rc.append(source);
+                // let source = Decoder::new(BELL_A_CURSOR).expect("Focus Bell failed");
+                // audio_sink_rc.append(source);
+                audio_rc.play_focus_bell();
             }
             _ => {
-                let source = Decoder::new(BELL_B_CURSOR).expect("Break Bell failed");
-                audio_sink_rc.append(source);
+                // let source = Decoder::new(BELL_B_CURSOR).expect("Break Bell failed");
+                // audio_sink_rc.append(source);
+                audio_rc.play_break_bell();
             }
         });
 
     let cfg_clone = shared_cfg.clone();
+    let audio_rc = audio.clone();
     main_window.global::<ExternalSystem>().on_tick(
         move |current_interval| match current_interval {
             Interval::Focus => {
                 if cfg_clone.borrow().tick_sound {
-                    let deco = Decoder::new(TICK_CURSOR).expect("Tick failed");
-                    audio_sink.append(deco);
+                    audio_rc.play_tick();
                 }
             }
             _ => {}
@@ -251,7 +240,15 @@ fn main() -> Result<(), slint::PlatformError> {
         _ = progress_integration.borrow().emit();
         CloseRequestResponse::HideWindow
     });
-
+    let mut audio_rc = audio.clone();
+    let idle_timer = slint::Timer::default();
+    idle_timer.start(
+        slint::TimerMode::Repeated,
+        Duration::from_secs(5),
+        move || {
+            audio_rc.close_if_idle();
+        },
+    );
     main_window.global::<LinkEvent>().on_click(move |url| {
         let out = webbrowser::open(&url);
         if let Err(e) = out {
