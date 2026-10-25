@@ -1,3 +1,12 @@
+## v0.8.3 (2026-10-25)
+
+### Fix
+
+- **nix**: streamline flake
+- move audio to its own file
+- make cursor constant
+- bump deps
+
 ## v0.8.2 (2026-10-21)
 
 ### Fix
