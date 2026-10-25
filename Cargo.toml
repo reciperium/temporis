@@ -42,4 +42,4 @@ toml = "1"
 webbrowser = "1"
 
 [target.'cfg(target_os = "linux")'.dependencies]
-zbus = "5.13.2"
+zbus = "6.0.0"
