@@ -133,7 +133,7 @@
               buildInputs =
                 with pkgs;
                 [ ]
-                ++ lib.optionals stdenv.isLinux [
+                ++ lib.optionals stdenv.hostPlatform.isLinux [
                   fontconfig
                   alsa-lib
                   makeWrapper
@@ -149,11 +149,11 @@
             # installable for NixOS
             temporis-desktop = pkgs.stdenv.mkDerivation {
               name = "temporis-desktop";
-              nativeBuildInputs = with pkgs; [ ] ++ lib.optionals stdenv.isLinux [ copyDesktopItems ];
+              nativeBuildInputs = with pkgs; [ ] ++ lib.optionals stdenv.hostPlatform.isLinux [ copyDesktopItems ];
               buildInputs =
                 with pkgs;
                 [ ]
-                ++ lib.optionals stdenv.isLinux [
+                ++ lib.optionals stdenv.hostPlatform.isLinux [
                   makeWrapper
                 ];
               src = self;
@@ -170,7 +170,7 @@
                   install -Dm644 assets/icons/logo.svg $out/share/icons/hicolor/scalable/apps/com.reciperium.temporis.svg
 
                 ''
-                + lib.optionalString stdenv.isLinux ''
+                + lib.optionalString stdenv.hostPlatform.isLinux ''
                   wrapProgram $out/bin/temporis --set LD_LIBRARY_PATH "${ldLibraryPath}"
                 ''
                 + ''
