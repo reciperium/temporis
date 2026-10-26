@@ -1,3 +1,9 @@
+## v0.8.4 (2026-10-26)
+
+### Fix
+
+- use stdenv.hostPlatform.isLinux
+
 ## v0.8.3 (2026-10-25)
 
 ### Fix
