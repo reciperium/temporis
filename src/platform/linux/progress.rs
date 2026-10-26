@@ -1,7 +1,4 @@
-use zbus::{
-    blocking::Connection,
-    zvariant::{DeserializeDict, SerializeDict, Type},
-};
+use zbus::zvariant::{DeserializeDict, SerializeDict, Type};
 
 use crate::platform_interfaces::progress::{ProgressError, ProgressIntegration};
 
@@ -15,16 +12,22 @@ pub struct UnityLauncher {
 
 impl ProgressIntegration for UnityLauncher {
     fn emit(&self) -> Result<(), ProgressError> {
-        let conn = Connection::session().expect("Session should've created a connection");
-        let signal_result = conn.emit_signal(
-            Some("com.canonical.Unity"),
-            "/com/reciperium/temporis",
-            "com.canonical.Unity.LauncherEntry",
-            "Update",
-            &("application://com.reciperium.temporis.desktop", self),
-        );
-        signal_result.map_err(|err| ProgressError::EmitFailed {
-            reason: err.to_string(),
+        zbus::block_on(async {
+            let conn = zbus::Connection::session()
+                .await
+                .expect("Session should've created a connection");
+            let signal_result = conn
+                .emit_signal(
+                    Some("com.canonical.Unity"),
+                    "/com/reciperium/temporis",
+                    "com.canonical.Unity.LauncherEntry",
+                    "Update",
+                    &("application://com.reciperium.temporis.desktop", self),
+                )
+                .await;
+            signal_result.map_err(|err| ProgressError::EmitFailed {
+                reason: err.to_string(),
+            })
         })
     }
 
